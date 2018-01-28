@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FeaturePage /> should render the page 1`] = `
+<div
+  className="FeaturePage__Wrapper-jjtHdi haBRpG"
+>
+  <h1
+    className="H1-gsrphG KFgCL"
+  >
+    Features
+  </h1>
+  <hr />
+  <h3
+    className="H3-bmSTNA ioxIcO"
+  >
+    Quick scaffolding
+  </h3>
+  <p>
+    Create components, containers, routes, selectors and sagas - and their tests - right from the CLI!
+  </p>
+  <h3
+    className="H3-bmSTNA ioxIcO"
+  >
+    Hot reloading
+  </h3>
+  <p>
+    Saved changes to styling and JS code will instantly reload in the browser without needing a page refresh.
+  </p>
+  <h3
+    className="H3-bmSTNA ioxIcO"
+  >
+    Predictable state management
+  </h3>
+  <p>
+    Unidirectional data flow (Redux) allows for change logging and time travel debugging.
+  </p>
+  <h3
+    className="H3-bmSTNA ioxIcO"
+  >
+    Next-gen JavaScript
+  </h3>
+  <p>
+    Use template strings, object destructuring, arrow functions, JSX syntax and more, right out of the box!
+  </p>
+  <h3
+    className="H3-bmSTNA ioxIcO"
+  >
+    Next-gen CSS
+  </h3>
+  <p>
+    Write composable CSS that's co-located with components for complete modularity.
+  </p>
+  <h3
+    className="H3-bmSTNA ioxIcO"
+  >
+    Industry-standard routing
+  </h3>
+  <p>
+    Routing makes it easy to add additional pages to the application (\`/about\`).
+  </p>
+  <h3
+    className="H3-bmSTNA ioxIcO"
+  >
+    Offline-first
+  </h3>
+  <p>
+    Make your web pages available without a network connection the instant a user loads the page.
+  </p>
+  <h3
+    className="H3-bmSTNA ioxIcO"
+  >
+    SEO
+  </h3>
+  <p>
+    Support for SEO (document head tags management) for search engines that support indexing JavaScript content (Google).
+  </p>
+</div>
+`;

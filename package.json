@@ -1,0 +1,238 @@
+{
+  "name": "react-redux-boilerplate",
+  "version": "1.0.0",
+  "description": "Boilerplate for React, Redux, and Webpack",
+  "main": "index.js",
+  "engines": {
+    "npm": ">=3",
+    "node": ">=7"
+  },
+  "author": "Bill Hefty",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bhefty/react-redux-boilerplate"
+  },
+  "homepage": "http://bhefty-boilerplate.herokuapp.com",
+  "license": "MIT",
+  "scripts": {
+    "analyze:clean": "rimraf stats.json",
+    "preanalyze": "npm run analyze:clean",
+    "analyze": "node ./internals/scripts/analyze.js",
+    "npmcheckversion": "node ./internals/scripts/npmcheckversion.js",
+    "preinstall": "npm run npmcheckversion",
+    "clean:all": "npm run analyze:clean && npm run test:clean && npm run build:clean",
+    "postinstall": "npm run build:dll",
+    "prebuild": "npm run build:clean",
+    "build": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",
+    "build:clean": "rimraf ./build",
+    "build:dll": "node ./internals/scripts/dependencies.js",
+    "start": "cross-env NODE_ENV=development node server",
+    "start:tunnel": "cross-env NODE_ENV=development ENABLE_TUNNEL=true node server",
+    "start:production": "npm run test && npm run build && npm run start:prod",
+    "start:prod": "cross-env NODE_ENV=production node server",
+    "presetup": "npm i chalk shelljs",
+    "setup": "node ./internals/scripts/setup.js",
+    "postsetup": "npm run build:dll",
+    "generate": "plop --plopfile internals/generators/index.js",
+    "lint": "npm run lint:js",
+    "lint:js": "./node_modules/.bin/standard --verbose | snazzy",
+    "lint:staged": "lint-staged",
+    "lint-fix": "./node_modules/.bin/standard --fix",
+    "pretest": "npm run test:clean && npm run lint",
+    "test:clean": "rimraf ./coverage",
+    "test": "cross-env NODE_ENV=test jest --coverage",
+    "test:watch": "cross-env NODE_ENV=test jest --watchAll",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "heroku-postbuild": "npm run build"
+  },
+  "lint-staged": {
+    "*.js": "lint:js"
+  },
+  "pre-commit": "lint:staged",
+  "babel": {
+    "plugins": [
+      "styled-components"
+    ],
+    "presets": [
+      [
+        "env",
+        {
+          "modules": false
+        }
+      ],
+      "react",
+      "stage-0"
+    ],
+    "env": {
+      "production": {
+        "only": [
+          "app"
+        ],
+        "plugins": [
+          "transform-react-remove-prop-types",
+          "transform-react-constant-elements",
+          "transform-react-inline-elements"
+        ]
+      },
+      "test": {
+        "plugins": [
+          "transform-es2015-modules-commonjs",
+          "dynamic-import-node"
+        ]
+      }
+    }
+  },
+  "dllPlugin": {
+    "path": "node_modules/react-boilerplate-dlls",
+    "exclude": [
+      "chalk",
+      "compression",
+      "cross-env",
+      "express",
+      "ip",
+      "minimist",
+      "sanitize.css"
+    ],
+    "include": [
+      "core-js",
+      "lodash",
+      "eventsource-polyfill"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "app/**/*.{js,jsx}",
+      "!app/**/*.test.{js,jsx}",
+      "!app/*/RbGenerated*/*.{js,jsx}",
+      "!app/app.js",
+      "!app/*/*/Loadable.{js,jsx}",
+      "!app/routes.js",
+      "!app/routeAsyncComponents.js",
+      "!app/utils/asyncComponent.js",
+      "!app/utils/asyncInjectors.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 98,
+        "branches": 91,
+        "functions": 98,
+        "lines": 98
+      }
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "app"
+    ],
+    "coveragePathIgnorePatterns": [
+      "app/global-styles.js"
+    ],
+    "moduleNameMapper": {
+      ".*\\.(css|less|styl|scss|sass)$": "<rootDir>/internals/mocks/cssModule.js",
+      ".*\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/image.js"
+    },
+    "setupTestFrameworkScriptFile": "<rootDir>/internals/testing/test-bundler.js",
+    "testRegex": "tests/.*\\.test\\.js$"
+  },
+  "dependencies": {
+    "babel-polyfill": "6.23.0",
+    "chalk": "^2.1.0",
+    "compression": "1.6.2",
+    "cross-env": "5.0.1",
+    "express": "4.15.3",
+    "fontfaceobserver": "2.0.13",
+    "history": "4.6.3",
+    "immutable": "3.8.1",
+    "invariant": "2.2.2",
+    "ip": "1.1.5",
+    "lodash": "4.17.4",
+    "minimist": "1.2.0",
+    "prop-types": "15.5.10",
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "react-helmet": "5.1.3",
+    "react-loadable": "^5.3.1",
+    "react-redux": "5.0.5",
+    "react-router": "4.2.0",
+    "react-router-dom": "4.2.2",
+    "react-router-redux": "5.0.0-alpha.9",
+    "redux": "3.7.1",
+    "redux-immutable": "4.0.0",
+    "redux-saga": "0.15.4",
+    "reselect": "3.0.1",
+    "sanitize.css": "5.0.0",
+    "styled-components": "2.4.0",
+    "warning": "3.0.0",
+    "whatwg-fetch": "2.0.3"
+  },
+  "devDependencies": {
+    "add-asset-html-webpack-plugin": "^2.1.2",
+    "babel-cli": "6.24.1",
+    "babel-core": "6.25.0",
+    "babel-eslint": "8.2.1",
+    "babel-jest": "^22.1.0",
+    "babel-loader": "7.1.0",
+    "babel-plugin-dynamic-import-node": "1.0.2",
+    "babel-plugin-react-transform": "3.0.0",
+    "babel-plugin-styled-components": "^1.4.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "6.24.1",
+    "babel-plugin-transform-react-constant-elements": "6.23.0",
+    "babel-plugin-transform-react-inline-elements": "6.22.0",
+    "babel-plugin-transform-react-remove-prop-types": "0.4.6",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "6.24.1",
+    "babel-preset-stage-0": "6.24.1",
+    "circular-dependency-plugin": "4.4.0",
+    "coveralls": "3.0.0",
+    "css-loader": "0.28.4",
+    "enzyme": "3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "eventsource-polyfill": "0.9.6",
+    "exports-loader": "0.6.4",
+    "file-loader": "1.1.6",
+    "hoist-non-react-statics": "^2.3.1",
+    "html-loader": "0.5.5",
+    "html-webpack-plugin": "2.29.0",
+    "image-webpack-loader": "3.3.1",
+    "imports-loader": "0.7.1",
+    "jest-cli": "22.1.4",
+    "jest-styled-components": "^4.10.0",
+    "lint-staged": "6.0.1",
+    "ngrok": "2.2.11",
+    "node-plop": "0.9.0",
+    "null-loader": "0.1.1",
+    "offline-plugin": "4.8.1",
+    "plop": "1.8.0",
+    "pre-commit": "1.2.2",
+    "react-test-renderer": "16.2.0",
+    "rimraf": "2.6.1",
+    "shelljs": "^0.8.1",
+    "snazzy": "7.0.0",
+    "standard": "10.0.2",
+    "style-loader": "0.19.1",
+    "url-loader": "0.6.2",
+    "webpack": "3.10.0",
+    "webpack-dev-middleware": "2.0.4",
+    "webpack-hot-middleware": "2.21.0"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "env": {
+      "jest": true
+    },
+    "globals": [
+      "state",
+      "propTypes",
+      "componentWillMount",
+      "componentWillReceiveProps",
+      "componentWillUpdate",
+      "componentWillUnmount",
+      "componentDidMount",
+      "componentDidUpdate",
+      "componentDidCatch",
+      "shouldComponentUpdate",
+      "contextTypes",
+      "displayName",
+      "injectors"
+    ]
+  }
+}

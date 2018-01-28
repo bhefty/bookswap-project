@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<HomePage /> should render the page 1`] = `
+<article>
+  <div>
+    <section
+      className="CenteredSection-jZhAJH huHXpx Section-kjlTVo iwZUVc"
+    >
+      <h1
+        className="H1-gsrphG KFgCL"
+      >
+        Start your project right away!
+      </h1>
+      <p>
+        A highly scalable, offline-first foundation based on the popular react-boilerplate.
+      </p>
+    </section>
+    <section
+      className="Section-kjlTVo iwZUVc"
+    >
+      <h2
+        className="H2-eUbBFj foTfOk"
+      >
+        Try me! Redux Saga API Call
+      </h2>
+      <form
+        className="Form-dhHGoS dsIrGS"
+        onSubmit={undefined}
+      >
+        <label
+          htmlFor="text"
+        >
+          Enter some text to see it translated into Yoda-Speak:
+          <br />
+          <input
+            className="Input-hxTtdt ibVsPk"
+            id="text"
+            onChange={undefined}
+            placeholder="You can use this boilerplate to get started right away!"
+            type="text"
+            value={undefined}
+          />
+        </label>
+      </form>
+      <p>
+        Something went wrong, please try again!
+      </p>
+    </section>
+  </div>
+  <div>
+    <h2
+      className="H2-eUbBFj foTfOk"
+    >
+      Simple counter using Redux actions
+    </h2>
+    Current counter value: 
+    <div>
+      <div
+        className="Wrapper-ThVjl dVEFs"
+      >
+        <a
+          className="A-bJefwH gaDVrT"
+          href={undefined}
+          onClick={undefined}
+        >
+          Increment
+        </a>
+      </div>
+      <div
+        className="Wrapper-ThVjl dVEFs"
+      >
+        <a
+          className="A-bJefwH gaDVrT"
+          href={undefined}
+          onClick={undefined}
+        >
+          Decrement
+        </a>
+      </div>
+    </div>
+  </div>
+</article>
+`;
