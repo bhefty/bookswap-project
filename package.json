@@ -1,7 +1,7 @@
 {
-  "name": "react-redux-boilerplate",
+  "name": "bookswap-project",
   "version": "1.0.0",
-  "description": "Boilerplate for React, Redux, and Webpack",
+  "description": "Book trading web app",
   "main": "index.js",
   "engines": {
     "npm": ">=3",
@@ -10,9 +10,9 @@
   "author": "Bill Hefty",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bhefty/react-redux-boilerplate"
+    "url": "https://github.com/bhefty/bookswap-project"
   },
-  "homepage": "http://bhefty-boilerplate.herokuapp.com",
+  "homepage": "http://bhefty-bookswap-project.herokuapp.com",
   "license": "MIT",
   "scripts": {
     "analyze:clean": "rimraf stats.json",
