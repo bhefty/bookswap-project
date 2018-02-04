@@ -3,6 +3,7 @@ import { combineReducers } from 'redux-immutable'
 import { LOCATION_CHANGE } from 'react-router-redux'
 
 import globalReducer from 'containers/App/reducer'
+import authReducer from 'auth/reducer'
 
 const routeInitialState = fromJS({
   location: null
@@ -25,6 +26,7 @@ export default function createReducer (injectedReducers) {
   return combineReducers({
     route: routeReducer,
     global: globalReducer,
+    auth: authReducer,
     ...injectedReducers
   })
 }
