@@ -3,11 +3,16 @@ import Helmet from 'react-helmet'
 import styled, { ThemeProvider } from 'styled-components'
 import { Switch, Route } from 'react-router-dom'
 
+import Auth from 'utils/auth'
+
 import Header from 'components/Header'
 import Footer from 'components/Footer'
 import HomePage from 'containers/HomePage/Loadable'
 import FeaturePage from 'containers/FeaturePage/Loadable'
+import CallbackPage from 'containers/CallbackPage'
 import NotFoundPage from 'containers/NotFoundPage/Loadable'
+
+const auth = new Auth()
 
 const theme = {
   primary: '#434C5E',
@@ -26,7 +31,8 @@ const AppWrapper = styled.div`
   padding: 0 16px;
   flex-direction: column;
 `
-
+console.log('proc', process.env.NODE_ENV)
+console.log('env', process.env.AUTH0_DOMAIN)
 export default function App () {
   return (
     <ThemeProvider theme={theme}>
@@ -37,11 +43,14 @@ export default function App () {
         >
           <meta name='description' content='A React.js Boierlplate application with Redux' />
         </Helmet>
-        <Header />
+        <Header auth={auth} />
         <AppWrapper>
           <Switch>
             <Route exact path='/' component={HomePage} />
             <Route path='/features' component={FeaturePage} />
+            <Route path='/callback'>
+              <CallbackPage auth={auth} />
+            </Route>
             <Route path='' component={NotFoundPage} />
           </Switch>
         </AppWrapper>
