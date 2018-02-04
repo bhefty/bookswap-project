@@ -3,6 +3,7 @@
 
 const path = require('path')
 const webpack = require('webpack')
+require('dotenv').config()
 
 module.exports = (options) => ({
   entry: options.entry,
@@ -85,7 +86,11 @@ module.exports = (options) => ({
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        AUTH0_DOMAIN: JSON.stringify(process.env.AUTH0_DOMAIN)
+        AUTH0_DOMAIN: JSON.stringify(process.env.AUTH0_DOMAIN),
+        AUTH0_CLIENT_ID: JSON.stringify(process.env.AUTH0_CLIENT_ID),
+        AUTH0_REDIRECT_URI: JSON.stringify(process.env.AUTH0_REDIRECT_URI),
+        AUTH0_RESPONSE_TYPE: JSON.stringify(process.env.AUTH0_RESPONSE_TYPE),
+        AUTH0_SCOPE: JSON.stringify(process.env.AUTH0_SCOPE)
       }
     }),
     new webpack.NamedModulesPlugin()
