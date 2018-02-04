@@ -84,7 +84,8 @@ module.exports = (options) => ({
     // drop any unreachable code
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        AUTH0_DOMAIN: JSON.stringify(process.env.AUTH0_DOMAIN)
       }
     }),
     new webpack.NamedModulesPlugin()
@@ -104,5 +105,8 @@ module.exports = (options) => ({
   },
   devtool: options.devtool,
   target: 'web',
+  node: {
+    fs: 'empty'
+  },
   performance: options.performance || {}
 })
