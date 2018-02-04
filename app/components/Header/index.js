@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { createStructuredSelector } from 'reselect'
+
+import { loginRequest, logout } from 'auth/actions'
+import { makeSelectIsAuthenticated } from 'auth/selectors'
 
 import Img from 'components/Img'
 import logo from './logo_white.png'
 import Wrapper from './Wrapper'
 
-class Header extends Component {
+export class Header extends Component {
   constructor (props) {
     super(props)
     this.toggleNav = this.toggleNav.bind(this)
@@ -45,6 +51,10 @@ class Header extends Component {
           </button>
           <div id='menu-list' className='header__links' onClick={this.setExpandedFalse}>
             <Link to='/features' className='header__link'><span>Features</span></Link>
+            {this.props.isAuthenticated
+              ? <button className='header__link' onClick={this.props.logout}>Logout</button>
+              : <button className='header__link' onClick={this.props.login}>Login</button>
+            }
           </div>
         </div>
       </Wrapper>
@@ -52,4 +62,17 @@ class Header extends Component {
   }
 }
 
-export default Header
+const mapStateToProps = createStructuredSelector({
+  isAuthenticated: makeSelectIsAuthenticated()
+})
+
+export const mapDispatchToProps = (dispatch) => ({
+  login: () => dispatch(loginRequest()),
+  logout: () => dispatch(logout())
+})
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
+
+export default compose(
+  withConnect
+)(Header)

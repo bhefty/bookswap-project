@@ -106,10 +106,7 @@
       "!app/*/RbGenerated*/*.{js,jsx}",
       "!app/app.js",
       "!app/*/*/Loadable.{js,jsx}",
-      "!app/routes.js",
-      "!app/routeAsyncComponents.js",
-      "!app/utils/asyncComponent.js",
-      "!app/utils/asyncInjectors.js"
+      "!app/utils/auth.js"
     ],
     "coverageThreshold": {
       "global": {
@@ -134,16 +131,19 @@
     "testRegex": "tests/.*\\.test\\.js$"
   },
   "dependencies": {
+    "auth0-js": "^9.1.2",
     "babel-polyfill": "6.23.0",
     "chalk": "^2.1.0",
     "compression": "1.6.2",
     "cross-env": "5.0.1",
+    "dotenv": "^5.0.0",
     "express": "4.15.3",
     "fontfaceobserver": "2.0.13",
     "history": "4.6.3",
     "immutable": "3.8.1",
     "invariant": "2.2.2",
     "ip": "1.1.5",
+    "jsonwebtoken": "^8.1.1",
     "lodash": "4.17.4",
     "minimist": "1.2.0",
     "prop-types": "15.5.10",
@@ -197,6 +197,7 @@
     "jest-cli": "22.1.4",
     "jest-styled-components": "^4.10.0",
     "lint-staged": "6.0.1",
+    "localStorage": "^1.0.3",
     "ngrok": "2.2.11",
     "node-plop": "0.9.0",
     "null-loader": "0.1.1",
@@ -204,6 +205,9 @@
     "plop": "1.8.0",
     "pre-commit": "1.2.2",
     "react-test-renderer": "16.2.0",
+    "redux-observable": "^0.17.0",
+    "redux-saga-testing": "^1.0.5",
+    "redux-tdd": "^1.1.0",
     "rimraf": "2.6.1",
     "shelljs": "^0.8.1",
     "snazzy": "7.0.0",

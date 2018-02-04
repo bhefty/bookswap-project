@@ -8,6 +8,8 @@ import { routerMiddleware } from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
 import createReducer from './reducers'
 
+import authSagas from 'auth/saga'
+
 const sagaMiddleware = createSagaMiddleware()
 
 /* istanbul ignore next */
@@ -44,6 +46,9 @@ export default function configureStore (initialState = {}, history) {
     fromJS(initialState),
     composeEnhancers(...enhancers)
   )
+
+  // Run saga for auth
+  sagaMiddleware.run(authSagas)
 
   // Extensions
   store.runSaga = sagaMiddleware.run

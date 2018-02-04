@@ -26,8 +26,7 @@ import reducer from './reducer'
 {{#if wantSaga}}
 import saga from './saga'
 {{/if}}
-
-function {{ properCase name }}() {
+function {{ properCase name }} () {
   return (
     <div>
     {{#if wantHeaders}}
@@ -44,14 +43,13 @@ function {{ properCase name }}() {
 {{ properCase name }}.propTypes = {
   dispatch: PropTypes.func.isRequired
 }
-
 {{#if wantActionsAndReducer}}
 const mapStateToProps = createStructuredSelector({
   {{ lowerCase name }}: makeSelect{{properCase name}}()
 })
 {{/if}}
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return {
     dispatch
   }
