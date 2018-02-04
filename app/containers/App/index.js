@@ -31,8 +31,7 @@ const AppWrapper = styled.div`
   padding: 0 16px;
   flex-direction: column;
 `
-console.log('proc', process.env.NODE_ENV)
-console.log('env', process.env.AUTH0_DOMAIN)
+
 export default function App () {
   return (
     <ThemeProvider theme={theme}>
