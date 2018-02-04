@@ -26,7 +26,7 @@ const AppWrapper = styled.div`
   padding: 0 16px;
   flex-direction: column;
 `
-
+console.log('Heroku test:', process.env.HEROKU_TEST)
 export default function App () {
   return (
     <ThemeProvider theme={theme}>
