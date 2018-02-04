@@ -1,0 +1,5 @@
+export const LOGIN_REQUEST = 'bookswap-project/auth/LOGIN_REQUEST'
+export const LOGIN_SUCCESS = 'bookswap-project/auth/LOGIN_SUCCESS'
+export const LOGIN_FAILURE = 'bookswap-project/auth/LOGIN_FAILURE'
+export const LOGOUT = 'bookswap-project/auth/LOGOUT'
+export const SET_SESSION = 'bookswap-project/auth/SET_SESSION'
