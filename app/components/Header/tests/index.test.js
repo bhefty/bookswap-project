@@ -1,7 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import Header from '../index'
+import { Header, mapDispatchToProps } from '../index'
+import { loginRequest, logout } from 'auth/actions'
 
 describe('<Header />', () => {
   it('should render a styled header called Wrapper', () => {
@@ -16,6 +17,20 @@ describe('<Header />', () => {
       <Header />
     )
     expect(renderedComponent.find('Link').length).toEqual(3)
+  })
+
+  it('should render Login button if not authenticated', () => {
+    const renderedComponent = shallow(
+      <Header />
+    )
+    expect(renderedComponent.find('button[children="Login"]').length).toEqual(1)
+  })
+
+  it('should render Logout button if authenticated', () => {
+    const renderedComponent = shallow(
+      <Header isAuthenticated />
+    )
+    expect(renderedComponent.find('button[children="Logout"]').length).toEqual(1)
   })
 
   describe('toggleNav', () => {
@@ -88,6 +103,38 @@ describe('<Header />', () => {
       expect(renderedComponent.state('expanded')).toBe(false)
       renderedComponent.instance().setExpandedFalse()
       expect(renderedComponent.state('expanded')).toBe(false)
+    })
+  })
+
+  describe('mapDispatchToProps', () => {
+    describe('login', () => {
+      it('should be injected', () => {
+        const dispatch = jest.fn()
+        const result = mapDispatchToProps(dispatch)
+        expect(result.login).toBeDefined()
+      })
+
+      it('should dispatch loginRequest when called', () => {
+        const dispatch = jest.fn()
+        const result = mapDispatchToProps(dispatch)
+        result.login()
+        expect(dispatch).toHaveBeenCalledWith(loginRequest())
+      })
+    })
+
+    describe('logout', () => {
+      it('should be injected', () => {
+        const dispatch = jest.fn()
+        const result = mapDispatchToProps(dispatch)
+        expect(result.logout).toBeDefined()
+      })
+
+      it('should dispatch logout when called', () => {
+        const dispatch = jest.fn()
+        const result = mapDispatchToProps(dispatch)
+        result.logout()
+        expect(dispatch).toHaveBeenCalledWith(logout())
+      })
     })
   })
 })
