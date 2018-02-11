@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoose = require('mongoose')
 const logger = require('./logger')
 
 const argv = require('./argv')
@@ -9,6 +10,14 @@ const isDev = process.env.NODE_ENV !== 'production'
 const ngrok = (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel ? require('ngrok') : false
 const resolve = require('path').resolve
 const app = express()
+
+// Connect to database
+const dbOptions = {
+  socketTimeoutMS: 30000,
+  keepAlive: true
+}
+mongoose.Promise = global.Promise
+mongoose.connect(process.env.MONGO_URI, dbOptions)
 
 // If you need a backend (API), add custom backend-specific middleware here
 // app.use('/api', myApi)
