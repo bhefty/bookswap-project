@@ -111,7 +111,7 @@ const typeDefs = `
 const resolvers = {
   Query: {
     user: (_, { id }) => find(users, { id: id }),
-    books: (_, { id }) => find(books, { id: id })
+    books: () => books
   },
   Mutation: {
     requestBook: (_, { requesterId, ownerId, bookId }) => {
