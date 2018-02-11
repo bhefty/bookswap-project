@@ -6,7 +6,8 @@ const pull = require('lodash').pull
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 
-const User = require('./models/User')
+const User = require('./models/user')
+const Book = require('./models/book')
 
 const users = [
   {
@@ -52,6 +53,7 @@ const books = [
 const typeDefs = `
   type User {
     _id: String!
+    userId: String!
     name: String
     email: String
     """
@@ -79,9 +81,11 @@ const typeDefs = `
   }
 
   type Book {
-    id: Int!
+    _id: String
+    bookId: String
     title: String
-    author: String
+    description: String
+    authors: [String]
     coverImg: String
   }
 
@@ -113,10 +117,8 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    // user: (_, { id }) => find(users, { id: id }),
     user: (_, { _id }) => User.findOne(ObjectId(_id)),
-    // user: () => User.find({}),
-    books: () => books
+    books: () => Book.find({})
   },
   Mutation: {
     requestBook: (_, { requesterId, ownerId, bookId }) => {
@@ -209,26 +211,28 @@ const resolvers = {
     }
   },
   User: {
-    booksInLibrary: (user) => filter(books, (book) => {
-      return includes(user.booksInLibrary, book.id)
+    booksInLibrary: (user) => user.booksInLibrary.map((bookId) => {
+      return Book.findOne({ bookId }, (err, book) => {
+        if (err) throw new Error(`Could not find book with bookId ${bookId}`)
+        return book
+      })
     }),
-    booksUserRequested: (user) => {
-      console.log(user)
-      return user.booksUserRequested.map(item => {
-        const book = find(books, { id: item.bookId })
-        // const owner = find(users, { id: item.ownerId })
-        const owner = User.findOne(ObjectId(item.ownerId))
-        return { book, owner }
+    booksUserRequested: (user) => user.booksUserRequested.map(item => {
+      const book = Book.findOne({ bookId: item.bookId }, (err, book) => {
+        if (err) throw new Error(`Could not find book with bookId ${item.bookId}`)
+        return book
       })
-    },
-    booksOtherRequested: (user) => {
-      return user.booksOtherRequested.map(item => {
-        const book = find(books, { id: item.bookId })
-        // const requester = find(users, { id: item.requesterId })
-        const requester = User.findOne(ObjectId(item.requesterId))
-        return { book, requester }
+      const owner = User.findOne(ObjectId(item.ownerId))
+      return { book, owner }
+    }),
+    booksOtherRequested: (user) => user.booksOtherRequested.map(item => {
+      const book = Book.findOne({ bookId: item.bookId }, (err, book) => {
+        if (err) throw new Error(`Could not find book with bookId ${item.bookId}`)
+        return book
       })
-    }
+      const requester = User.findOne(ObjectId(item.requesterId))
+      return { book, requester }
+    })
   }
 }
 
