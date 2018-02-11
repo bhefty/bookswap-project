@@ -4,6 +4,7 @@ const logger = require('./logger')
 const argv = require('./argv')
 const port = require('./port')
 const setup = require('./middlewares/frontendMiddleware')
+const addGraphQLMiddleware = require('./middlewares/addGraphQLMiddleware')
 const isDev = process.env.NODE_ENV !== 'production'
 const ngrok = (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel ? require('ngrok') : false
 const resolve = require('path').resolve
@@ -11,6 +12,9 @@ const app = express()
 
 // If you need a backend (API), add custom backend-specific middleware here
 // app.use('/api', myApi)
+
+// Define GraphQL backend
+addGraphQLMiddleware(app)
 
 // In production we pass these values in instead of relying on webpack
 setup(app, {
