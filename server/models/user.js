@@ -10,8 +10,14 @@ const UserSchema = new Schema({
   name: { type: String },
   email: { type: String },
   booksInLibrary: [{ type: String, ref: 'Book' }],
-  booksUserRequested: [{ type: String, ref: 'UserRequestedBook' }],
-  booksOtherRequested: [{ type: String, ref: 'OtherRequestedBook' }]
+  booksUserRequested: [{
+    bookId: { type: String },
+    ownerId: { type: String }
+  }],
+  booksOtherRequested: [{
+    bookId: { type: String },
+    requesterId: { type: String }
+  }]
 })
 
 module.exports = mongoose.model('User', UserSchema)
