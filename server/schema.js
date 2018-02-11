@@ -3,6 +3,10 @@ const find = require('lodash').find
 const filter = require('lodash').filter
 const includes = require('lodash').includes
 const pull = require('lodash').pull
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId
+
+const User = require('./models/User')
 
 const users = [
   {
@@ -33,23 +37,22 @@ const users = [
 ]
 
 const books = [
-  { id: 1, title: 'Book 1', author: 'Author 1', coverImg: 'cover1.jpg' },
-  { id: 2, title: 'Book 2', author: 'Author 2', coverImg: 'cover2.jpg' },
-  { id: 3, title: 'Book 3', author: 'Author 3', coverImg: 'cover3.jpg' },
-  { id: 4, title: 'Book 4', author: 'Author 4', coverImg: 'cover4.jpg' },
-  { id: 5, title: 'Book 5', author: 'Author 5', coverImg: 'cover5.jpg' },
-  { id: 6, title: 'Book 6', author: 'Author 6', coverImg: 'cover6.jpg' },
-  { id: 7, title: 'Book 7', author: 'Author 7', coverImg: 'cover7.jpg' },
-  { id: 8, title: 'Book 8', author: 'Author 8', coverImg: 'cover8.jpg' },
-  { id: 9, title: 'Book 9', author: 'Author 9', coverImg: 'cover9.jpg' },
-  { id: 10, title: 'Book 10', author: 'Author 10', coverImg: 'cover10.jpg' }
+  { id: '1', title: 'Book 1', author: 'Author 1', coverImg: 'cover1.jpg' },
+  { id: '2', title: 'Book 2', author: 'Author 2', coverImg: 'cover2.jpg' },
+  { id: '3', title: 'Book 3', author: 'Author 3', coverImg: 'cover3.jpg' },
+  { id: '4', title: 'Book 4', author: 'Author 4', coverImg: 'cover4.jpg' },
+  { id: '5', title: 'Book 5', author: 'Author 5', coverImg: 'cover5.jpg' },
+  { id: '6', title: 'Book 6', author: 'Author 6', coverImg: 'cover6.jpg' },
+  { id: '7', title: 'Book 7', author: 'Author 7', coverImg: 'cover7.jpg' },
+  { id: '8', title: 'Book 8', author: 'Author 8', coverImg: 'cover8.jpg' },
+  { id: '9', title: 'Book 9', author: 'Author 9', coverImg: 'cover9.jpg' },
+  { id: '10', title: 'Book 10', author: 'Author 10', coverImg: 'cover10.jpg' }
 ]
 
 const typeDefs = `
   type User {
-    id: Int!
-    firstName: String
-    lastName: String
+    _id: String!
+    name: String
     email: String
     """
     The list of Books this user has in their library
@@ -83,7 +86,7 @@ const typeDefs = `
   }
 
   type Query {
-    user(id: Int!): User
+    user(_id: String): User
     books: [Book]
   }
 
@@ -110,7 +113,9 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    user: (_, { id }) => find(users, { id: id }),
+    // user: (_, { id }) => find(users, { id: id }),
+    user: (_, { _id }) => User.findOne(ObjectId(_id)),
+    // user: () => User.find({}),
     books: () => books
   },
   Mutation: {
@@ -208,16 +213,19 @@ const resolvers = {
       return includes(user.booksInLibrary, book.id)
     }),
     booksUserRequested: (user) => {
+      console.log(user)
       return user.booksUserRequested.map(item => {
         const book = find(books, { id: item.bookId })
-        const owner = find(users, { id: item.ownerId })
+        // const owner = find(users, { id: item.ownerId })
+        const owner = User.findOne(ObjectId(item.ownerId))
         return { book, owner }
       })
     },
     booksOtherRequested: (user) => {
       return user.booksOtherRequested.map(item => {
         const book = find(books, { id: item.bookId })
-        const requester = find(users, { id: item.requesterId })
+        // const requester = find(users, { id: item.requesterId })
+        const requester = User.findOne(ObjectId(item.requesterId))
         return { book, requester }
       })
     }
