@@ -111,9 +111,7 @@ module.exports = (options) => ({
   devtool: options.devtool,
   target: 'web',
   node: {
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty'
+    fs: 'empty'
   },
   performance: options.performance || {}
 })
