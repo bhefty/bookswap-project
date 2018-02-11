@@ -7,9 +7,9 @@ const UserSchema = new Schema({
     unique: true,
     required: true
   },
-  name: { type: String },
+  name: { type: String, required: true },
   email: { type: String },
-  booksInLibrary: [{ type: String, ref: 'Book' }],
+  booksInLibrary: [{ type: String }],
   booksUserRequested: [{
     bookId: { type: String },
     ownerId: { type: String }
