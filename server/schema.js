@@ -95,6 +95,12 @@ const typeDefs = `
   }
 
   type Mutation {
+    createUser (
+      userId: String!
+      name: String
+      email: String
+    ): User
+
     requestBook (
       requesterId: Int!
       ownerId: Int!
@@ -121,6 +127,14 @@ const resolvers = {
     books: () => Book.find({})
   },
   Mutation: {
+    createUser: (_, { userId, name, email }) => User.create({
+      userId,
+      name,
+      email,
+      booksInLibrary: [],
+      booksUserRequested: [],
+      booksOtherRequested: []
+    }),
     requestBook: (_, { requesterId, ownerId, bookId }) => {
       const requester = find(users, { id: requesterId })
       const owner = find(users, { id: ownerId })
