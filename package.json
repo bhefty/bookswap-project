@@ -151,6 +151,7 @@
     "minimist": "1.2.0",
     "mongodb": "^3.0.2",
     "mongoose": "^5.0.4",
+    "node-fetch": "^2.0.0",
     "prop-types": "15.5.10",
     "react": "16.2.0",
     "react-dom": "16.2.0",
