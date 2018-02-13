@@ -191,40 +191,51 @@ const resolvers = {
           }
 
           // // Remove book from owner's library and add it to the owner's books that have been requested
-          User.findOneAndUpdate({ _id: owner._id }, {
+          return User.findOneAndUpdate({ _id: owner._id }, {
             $pull: { booksInLibrary: bookId },
             $push: { booksOtherRequested: { bookId, requesterId } }
           }, { new: true })
-
-          // Add Book to user's requested list
-          return User.findOneAndUpdate({ _id: requester._id }, {
-            $push: { booksUserRequested: { bookId, ownerId } }
-          }, { new: true })
+            .then(() => {
+              // Add Book to user's requested list
+              return User.findOneAndUpdate({ _id: requester._id }, {
+                $push: { booksUserRequested: { bookId, ownerId } }
+              }, { new: true })
+            })
         })
     },
     cancelRequestBook: (_, { requesterId, ownerId, bookId }) => {
-      const requester = find(users, { id: requesterId })
-      const owner = find(users, { id: ownerId })
-      const book = find(books, { id: bookId })
+      const findRequester = User.findOne({ _id: requesterId })
+      const findOwner = User.findOne({ _id: ownerId })
+      const findBook = Book.findOne({ bookId })
 
-      if (!requester) {
-        throw new Error(`Couldn't find the requesting user with id ${requester}`)
-      }
-      if (!owner) {
-        throw new Error(`Couldn't find the owner user with id ${owner}`)
-      }
-      if (!book) {
-        throw new Error(`Couldn't find the book with id ${bookId}`)
-      }
+      return Promise.all([findRequester, findOwner, findBook])
+        .then((result) => {
+          const requester = result[0]
+          const owner = result[1]
+          const book = result[2]
 
-      // Remove book from user's requested list
-      requester.booksUserRequested = filter(requester.booksUserRequested, (item) => item.bookId !== bookId && item.ownerId !== ownerId)
+          if (!requester) {
+            throw new Error(`Couldn't find the requesting user with id ${requester}`)
+          }
+          if (!owner) {
+            throw new Error(`Couldn't find the owner user with id ${owner}`)
+          }
+          if (!book) {
+            throw new Error(`Couldn't find the book with id ${bookId}`)
+          }
 
-      // Add book back into owner's library and remove book owner's requested from other's list
-      owner.booksInLibrary.push(bookId)
-      owner.booksOtherRequested = filter(owner.booksOtherRequested, (item) => item.bookId !== bookId && item.ownerId !== ownerId)
-
-      return requester
+          // Add book back into owner's library and remove book owner's requested from other's list
+          return User.findOneAndUpdate({ _id: owner._id }, {
+            $push: { booksInLibrary: bookId },
+            $pull: { booksOtherRequested: { bookId: bookId, requesterId: requesterId } }
+          }, { new: true })
+            .then(() => {
+              // Remove book from user's requested list
+              return User.findOneAndUpdate({ _id: requester._id }, {
+                $pull: { booksUserRequested: { bookId: bookId, ownerId: ownerId } }
+              }, { new: true })
+            })
+        })
     },
     acceptRequest: (_, { requesterId, ownerId, bookId }) => {
       const requester = find(users, { id: requesterId })
