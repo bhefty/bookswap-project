@@ -103,7 +103,7 @@ const resolvers = {
       booksOtherRequested: []
     }),
     createBook: async (_, { searchTitle }) => {
-      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchTitle}&key=AIzaSyC2wLZFh8W2evVxslXgaMq1_1Upf76TCAM`)
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchTitle}&key=${process.env.GOOGLE_BOOKS_API_KEY}`)
       const data = await response.json()
       const newBook = {
         bookId: data.items[0].id,
