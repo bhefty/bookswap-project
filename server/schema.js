@@ -2,9 +2,9 @@ const makeExecutableSchema = require('graphql-tools').makeExecutableSchema
 const find = require('lodash').find
 const filter = require('lodash').filter
 const includes = require('lodash').includes
-const pull = require('lodash').pull
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
+const fetch = require('node-fetch')
 
 const User = require('./models/user')
 const Book = require('./models/book')
@@ -101,22 +101,31 @@ const typeDefs = `
       email: String
     ): User
 
+    createBook (
+      searchTitle: String!
+    ): Book
+
+    removeBookFromLibrary (
+      _id: String!
+      bookId: String!
+    ): User
+
     requestBook (
-      requesterId: Int!
-      ownerId: Int!
-      bookId: Int!
+      requesterId: String!
+      ownerId: String!
+      bookId: String!
     ): User
 
     cancelRequestBook (
-      requesterId: Int!
-      ownerId: Int!
-      bookId: Int!
+      requesterId: String!
+      ownerId: String!
+      bookId: String!
     ): User
 
     acceptRequest (
-      requesterId: Int!
-      ownerId: Int!
-      bookId: Int!
+      requesterId: String!
+      ownerId: String!
+      bookId: String!
     ): User
   }
 `
@@ -135,45 +144,63 @@ const resolvers = {
       booksUserRequested: [],
       booksOtherRequested: []
     }),
+    createBook: async (_, { searchTitle }) => {
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchTitle}&key=AIzaSyC2wLZFh8W2evVxslXgaMq1_1Upf76TCAM`)
+      const data = await response.json()
+      const newBook = {
+        bookId: data.items[0].id,
+        title: data.items[0].volumeInfo.title,
+        authors: data.items[0].volumeInfo.authors,
+        description: data.items[0].volumeInfo.description,
+        coverImg: data.items[0].volumeInfo.imageLinks.thumbnail
+      }
+      return Book.create(newBook)
+    },
+    removeBookFromLibrary: (_, { _id, bookId }) => User.findOneAndUpdate(ObjectId(_id), {
+      $pull: { booksInLibrary: bookId }
+    }),
     requestBook: (_, { requesterId, ownerId, bookId }) => {
-      const requester = find(users, { id: requesterId })
-      const owner = find(users, { id: ownerId })
-      const book = find(books, { id: bookId })
-      const requesterHasBook = includes(requester.booksInLibrary, bookId)
-      const requesterAlreadyAsked = filter(requester.booksUserRequested, (item) => {
-        return item.bookId === bookId && item.ownerId === ownerId
-      }).length !== 0
+      const findRequester = User.findOne({ _id: requesterId })
+      const findOwner = User.findOne({ _id: ownerId })
+      const findBook = Book.findOne({ bookId })
 
-      if (!requester) {
-        throw new Error(`Couldn't find the requesting user with id ${requester}`)
-      }
-      if (!owner) {
-        throw new Error(`Couldn't find the owner user with id ${owner}`)
-      }
-      if (!book) {
-        throw new Error(`Couldn't find the book with id ${bookId}`)
-      }
-      if (requesterHasBook) {
-        throw new Error(`Requester already has book in library with id ${bookId}`)
-      }
-      if (requesterAlreadyAsked) {
-        throw new Error(`Requester already has already requested book with id ${bookId} from owner with id ${ownerId}`)
-      }
+      return Promise.all([findRequester, findOwner, findBook])
+        .then((result) => {
+          const requester = result[0]
+          const owner = result[1]
+          const book = result[2]
+          const requesterHasBook = includes(requester.booksInLibrary, bookId)
+          const requesterAlreadyAsked = filter(requester.booksUserRequested, (item) => {
+            return item.bookId === bookId && item.ownerId === ownerId
+          }).length !== 0
 
-      // Add Book to user's requested list
-      requester.booksUserRequested.push({
-        bookId,
-        ownerId
-      })
+          if (!requester) {
+            throw new Error(`Couldn't find the requesting user with id ${requesterId}`)
+          }
+          if (!owner) {
+            throw new Error(`Couldn't find the owner user with id ${ownerId}`)
+          }
+          if (!book) {
+            throw new Error(`Couldn't find the book with id ${bookId}`)
+          }
+          if (requesterHasBook) {
+            throw new Error(`Requester already has book in library with id ${bookId}`)
+          }
+          if (requesterAlreadyAsked) {
+            throw new Error(`Requester already has already requested book with id ${bookId} from owner with id ${ownerId}`)
+          }
 
-      // Remove book from owner's library and add it to the owner's books that have been requested
-      owner.booksInLibrary = pull(owner.booksInLibrary, bookId)
-      owner.booksOtherRequested.push({
-        bookId,
-        requesterId
-      })
+          // // Remove book from owner's library and add it to the owner's books that have been requested
+          User.findOneAndUpdate({ _id: owner._id }, {
+            $pull: { booksInLibrary: bookId },
+            $push: { booksOtherRequested: { bookId, requesterId } }
+          }, { new: true })
 
-      return requester
+          // Add Book to user's requested list
+          return User.findOneAndUpdate({ _id: requester._id }, {
+            $push: { booksUserRequested: { bookId, ownerId } }
+          }, { new: true })
+        })
     },
     cancelRequestBook: (_, { requesterId, ownerId, bookId }) => {
       const requester = find(users, { id: requesterId })
