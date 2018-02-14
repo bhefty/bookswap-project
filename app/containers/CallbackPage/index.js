@@ -21,6 +21,7 @@ export function CallbackPage (props) {
           idToken: result.idToken,
           expiresIn: result.expiresIn
         }
+        console.log('LOGINS COUNT:', result.loginsCount)
         props.session(authResult)
       })
       .catch(err => props.failure(err))

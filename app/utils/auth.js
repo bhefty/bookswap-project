@@ -1,4 +1,5 @@
 import auth0 from 'auth0-js'
+import jsonwebtoken from 'jsonwebtoken'
 
 let config
 
@@ -40,7 +41,10 @@ export default class Auth {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => {
         if (authResult && authResult.accessToken && authResult.idToken) {
-          resolve(authResult)
+          const decodedResult = jsonwebtoken.decode(authResult.idToken)
+          const loginsCount = decodedResult['https://bhefty-bookswap-project.herokuapp.com/loginsCount']
+          const result = { ...authResult, loginsCount }
+          resolve(result)
         } else if (err) {
           reject(err)
         }
