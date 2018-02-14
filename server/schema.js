@@ -49,7 +49,7 @@ const typeDefs = `
 
   type Query {
     user(_id: String): User
-    books: [Book]
+    books: [Book] @cacheControl(maxAge: 240)
   }
 
   type Mutation {
