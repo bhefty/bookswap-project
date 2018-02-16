@@ -1,129 +1,128 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 import Helmet from 'react-helmet'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 
-import injectReducer from 'utils/injectReducer'
-import injectSaga from 'utils/injectSaga'
-import reducer from './reducer'
-import saga from './saga'
+import { makeSelectIsAuthenticated } from 'auth/selectors'
 
-import { makeSelectTranslation, makeSelectLoading, makeSelectError } from 'containers/App/selectors'
-import H1 from 'components/H1'
-import H2 from 'components/H2'
-import Button from 'components/Button'
-import TranslatedText from 'components/TranslatedText'
-import CenteredSection from './CenteredSection'
-import Form from './Form'
-import Input from './Input'
-import Section from './Section'
-import { loadTranslation } from '../App/actions'
-import { increment, decrement, changeText } from './actions'
-import { makeSelectCount, makeSelectText } from './selectors'
+import styled from 'styled-components'
+import logo from 'components/Header/logo_dark.png'
+import splashCover from './splash-cover.jpg'
+import { loginRequest } from 'auth/actions'
 
-export class HomePage extends PureComponent {
-  static propTypes = {
-    loading: PropTypes.bool,
-    error: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.bool
-    ]),
-    translation: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.bool
-    ]),
-    onSubmitForm: PropTypes.func,
-    text: PropTypes.string,
-    onChangeText: PropTypes.func
+const Splash = styled.div`
+  background: url(${splashCover}) no-repeat center center;
+  background-size: cover;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  left: 0;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  justify-items: center;
+  align-items: center;
+
+  main {
+    margin: 0 1em;
+
+    img {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      height: 2em;
+      opacity: 0.5;
+    }
+
+    h1 {
+      font-weight: 100;
+      font-size: 3em;
+      color: #444;
+      margin-bottom: 0;
+    }
+
+    h3 {
+      font-weight: 100;
+      font-size: 1em;
+      color: #444;
+      margin-bottom: 2em;
+      margin-top: 0.5em;
+    }
+
+    button {
+      display: inline-block;
+      box-sizing: border-box;
+      padding: 1.5em 1em;
+      border-radius: 4px;
+      outline: 0;
+      font-size: 1.5em;
+      background-color: #15B0D5;
+      color: #fff;
+
+      &:active: {
+        background: #15B0D5;
+        color: #fff;
+      }
+    }
+  }
+`
+
+export class HomePage extends React.Component {
+  constructor (props) {
+    super(props)
+    this._handleRoute = this._handleRoute.bind(this)
   }
 
-  // When initial state text is not null, submit the form to load translation
-  componentDidMount = () => {
-    if (this.props.text && this.props.text.trim().length > 0) {
-      this.props.onSubmitForm()
+  _handleRoute () {
+    if (this.props.isAuthenticated) {
+      this.props.history.push('/dashboard')
+    } else {
+      this.props.login()
     }
   }
 
   render () {
-    const { loading, error, translation } = this.props
-    const translationListProps = {
-      loading,
-      error,
-      translation
-    }
-
     return (
       <article>
         <Helmet
           title='Home Page'
           meta={[
-            { name: 'description', content: 'A React.js Boilerplate application homepage' }
+            { name: 'description', content: 'A trading platform for books' }
           ]}
         />
-        <div>
-          <CenteredSection>
-            <H1>Start your project right away!</H1>
-            <p>A highly scalable, offline-first foundation based on the popular react-boilerplate.</p>
-          </CenteredSection>
-          <Section>
-            <H2>Try me! Redux Saga API Call</H2>
-            <Form onSubmit={this.props.onSubmitForm}>
-              <label htmlFor='text'>
-                Enter some text to see it translated into Yoda-Speak:
-                <br />
-                <Input
-                  id='text'
-                  type='text'
-                  placeholder='You can use this boilerplate to get started right away!'
-                  value={this.props.text}
-                  onChange={this.props.onChangeText}
-                />
-              </label>
-            </Form>
-            <TranslatedText {...translationListProps} />
-          </Section>
-        </div>
-        <div>
-          <H2>Simple counter using Redux actions</H2>
-          Current counter value: {this.props.count}
-          <div>
-            <Button onClick={this.props.onIncrement}>Increment</Button>
-            <Button onClick={this.props.onDecrement}>Decrement</Button>
-          </div>
-        </div>
+        <Splash>
+          <main>
+            <img src={logo} alt='Bookswap Logo' />
+            <h1>Bookswap</h1>
+            <h3>Quickly and easily trade books with like-minded friends.</h3>
+            <button onClick={this._handleRoute}>
+              Get Started
+              <svg fill='#FFFFFF' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'>
+                <path d='M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z' />
+                <path d='M0-.25h24v24H0z' fill='none' />
+              </svg>
+            </button>
+          </main>
+        </Splash>
       </article>
     )
   }
 }
 
 const mapStateToProps = createStructuredSelector({
-  translation: makeSelectTranslation(),
-  text: makeSelectText(),
-  loading: makeSelectLoading(),
-  error: makeSelectError(),
-  count: makeSelectCount()
+  isAuthenticated: makeSelectIsAuthenticated()
 })
 
-export function mapDispatchToProps (dispatch) {
-  return {
-    onChangeText: (evt) => dispatch(changeText(evt.target.value)),
-    onSubmitForm: (evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault()
-      dispatch(loadTranslation())
-    },
-    onIncrement: () => dispatch(increment()),
-    onDecrement: () => dispatch(decrement())
-  }
-}
+export const mapDispatchToProps = (dispatch) => ({
+  login: () => dispatch(loginRequest())
+})
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
-const withReducer = injectReducer({ key: 'home', reducer })
-const withSaga = injectSaga({ key: 'home', saga })
 
 export default compose(
-  withReducer,
-  withSaga,
+  withRouter,
   withConnect
 )(HomePage)
