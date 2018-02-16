@@ -63,7 +63,7 @@ export function * watchLoginRequest () {
 
 export function * watchLoginSuccess () {
   yield take(LOGIN_SUCCESS)
-  yield put(push('/'))
+  yield put(push('/dashboard'))
 }
 
 export function * watchLoginFailure () {

@@ -17,25 +17,72 @@ describe('<CallbackPage />', () => {
     const renderedComponent = shallow(<CallbackPage {...props} />)
     expect(renderedComponent.find('LoadingIndicator').length).toEqual(1)
   })
-  it('should hanld .then from handleAuthentication', () => {
+
+  it('should handle .then from handleAuthentication', () => {
     const mockAuthResult = {
       accessToken: 'abc123',
       idToken: '123abc',
-      expiresIn: 7200
+      expiresIn: 7200,
+      userId: 'test|12345',
+      name: 'John Smith',
+      email: 'jsmith@me.com',
+      loginsCount: 1
     }
     const handleAuthenticationSpy = jest.fn(() => Promise.resolve(mockAuthResult))
     const sessionSpy = jest.fn()
+    const createUserSpy = jest.fn()
     const props = {
       auth: {
         handleAuthentication: handleAuthenticationSpy
       },
       location: { hash: '#access_token=123bde&expires_in=7200&token_type=Bearer&state=abc&id_token=abc123' },
       failure: jest.fn(),
-      session: sessionSpy
+      session: sessionSpy,
+      createUser: createUserSpy,
+      userInfo: {
+        userId: mockAuthResult.userId,
+        name: mockAuthResult.name,
+        email: mockAuthResult.email
+      }
     }
 
     const renderedComponent = mount(<CallbackPage {...props} />) // eslint-disable-line no-unused-vars
     expect(handleAuthenticationSpy).toHaveBeenCalled()
+    expect(renderedComponent.instance().props.createUser).toBeDefined()
+  })
+
+  it('should handle case where loginsCount is more than 1', () => {
+    const mockAuthResult = {
+      accessToken: 'abc123',
+      idToken: '123abc',
+      expiresIn: 7200,
+      userId: 'test|12345',
+      name: 'John Smith',
+      email: 'jsmith@me.com',
+      loginsCount: 2
+    }
+    const handleAuthenticationSpy = jest.fn(() => Promise.resolve(mockAuthResult))
+    const sessionSpy = jest.fn()
+    const createUserSpy = jest.fn((variables) => console.log('vars', variables))
+    const props = {
+      auth: {
+        handleAuthentication: handleAuthenticationSpy
+      },
+      location: { hash: '#access_token=123bde&expires_in=7200&token_type=Bearer&state=abc&id_token=abc123' },
+      failure: jest.fn(),
+      session: sessionSpy,
+      createUser: createUserSpy,
+      userInfo: {
+        userId: mockAuthResult.userId,
+        name: mockAuthResult.name,
+        email: mockAuthResult.email
+      }
+    }
+
+    const renderedComponent = mount(<CallbackPage {...props} />) // eslint-disable-line no-unused-vars
+    expect(handleAuthenticationSpy).toHaveBeenCalled()
+    expect(renderedComponent.instance().props.createUser).toBeDefined()
+    expect(createUserSpy).not.toHaveBeenCalled()
   })
 
   it('should catch error', () => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 
@@ -40,6 +41,7 @@ export class Header extends Component {
   }
 
   render () {
+    if (this.props.location.pathname === '/') return null
     return (
       <Wrapper expanded={this.state.expanded} onKeyDown={this.handleKeyDown}>
         <div className='header'>
@@ -74,5 +76,6 @@ export const mapDispatchToProps = (dispatch) => ({
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
 export default compose(
+  withRouter,
   withConnect
 )(Header)

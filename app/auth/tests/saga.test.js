@@ -131,7 +131,7 @@ describe('authSagas', () => {
     })
 
     it('should trigger redirect to \'/\'', result => {
-      expect(result).toEqual(put(push('/')))
+      expect(result).toEqual(put(push('/dashboard')))
     })
 
     it('should do nothing', result => {

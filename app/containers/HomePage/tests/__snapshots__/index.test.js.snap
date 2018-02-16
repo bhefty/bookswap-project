@@ -2,82 +2,41 @@
 
 exports[`<HomePage /> should render the page 1`] = `
 <article>
-  <div>
-    <section
-      className="CenteredSection-jZhAJH huHXpx Section-kjlTVo iwZUVc"
-    >
-      <h1
-        className="H1-gsrphG KFgCL"
-      >
-        Start your project right away!
+  <div
+    className="HomePage__Splash-eQGvGD icCRCs"
+  >
+    <main>
+      <img
+        alt="Bookswap Logo"
+        src="IMAGE_MOCK"
+      />
+      <h1>
+        Bookswap
       </h1>
-      <p>
-        A highly scalable, offline-first foundation based on the popular react-boilerplate.
-      </p>
-    </section>
-    <section
-      className="Section-kjlTVo iwZUVc"
-    >
-      <h2
-        className="H2-eUbBFj foTfOk"
+      <h3>
+        Quickly and easily trade books with like-minded friends.
+      </h3>
+      <button
+        onClick={[Function]}
       >
-        Try me! Redux Saga API Call
-      </h2>
-      <form
-        className="Form-dhHGoS dsIrGS"
-        onSubmit={undefined}
-      >
-        <label
-          htmlFor="text"
+        Get Started
+        <svg
+          fill="#FFFFFF"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          Enter some text to see it translated into Yoda-Speak:
-          <br />
-          <input
-            className="Input-hxTtdt ibVsPk"
-            id="text"
-            onChange={undefined}
-            placeholder="You can use this boilerplate to get started right away!"
-            type="text"
-            value={undefined}
+          <path
+            d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"
           />
-        </label>
-      </form>
-      <p>
-        Something went wrong, please try again!
-      </p>
-    </section>
-  </div>
-  <div>
-    <h2
-      className="H2-eUbBFj foTfOk"
-    >
-      Simple counter using Redux actions
-    </h2>
-    Current counter value: 
-    <div>
-      <div
-        className="Wrapper-ThVjl dVEFs"
-      >
-        <a
-          className="A-bJefwH gaDVrT"
-          href={undefined}
-          onClick={undefined}
-        >
-          Increment
-        </a>
-      </div>
-      <div
-        className="Wrapper-ThVjl dVEFs"
-      >
-        <a
-          className="A-bJefwH gaDVrT"
-          href={undefined}
-          onClick={undefined}
-        >
-          Decrement
-        </a>
-      </div>
-    </div>
+          <path
+            d="M0-.25h24v24H0z"
+            fill="none"
+          />
+        </svg>
+      </button>
+    </main>
   </div>
 </article>
 `;
