@@ -44,7 +44,7 @@ export default class Auth {
           const decodedResult = jsonwebtoken.decode(authResult.idToken)
           const loginsCount = decodedResult['https://bhefty-bookswap-project.herokuapp.com/loginsCount']
           const userId = decodedResult.sub
-          const name = decodedResult.nickname
+          const name = decodedResult.name || decodedResult.nickname
           const email = decodedResult.email
           const result = {
             ...authResult,
