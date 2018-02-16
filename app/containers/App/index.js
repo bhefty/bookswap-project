@@ -28,7 +28,6 @@ const AppWrapper = styled.div`
   margin: 0 auto;
   display: flex;
   min-height: calc(100vh - 150px); // min height for App wrapper should account for nav and footer
-  padding: 0 16px;
   flex-direction: column;
 `
 
