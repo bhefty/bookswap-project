@@ -22,12 +22,12 @@ const Splash = styled.div`
   left: 0;
 
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   justify-items: center;
   align-items: center;
 
   main {
-    margin: 0 1em;
+    margin-left: 1em;
 
     img {
       position: absolute;
@@ -56,6 +56,7 @@ const Splash = styled.div`
       display: inline-block;
       box-sizing: border-box;
       padding: 1.5em 1em;
+      border: none;
       border-radius: 4px;
       outline: 0;
       font-size: 1.5em;

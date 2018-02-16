@@ -3,7 +3,7 @@
 exports[`<HomePage /> should render the page 1`] = `
 <article>
   <div
-    className="HomePage__Splash-eQGvGD jMSsDL"
+    className="HomePage__Splash-eQGvGD icCRCs"
   >
     <main>
       <img
