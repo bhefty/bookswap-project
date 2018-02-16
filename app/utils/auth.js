@@ -43,7 +43,16 @@ export default class Auth {
         if (authResult && authResult.accessToken && authResult.idToken) {
           const decodedResult = jsonwebtoken.decode(authResult.idToken)
           const loginsCount = decodedResult['https://bhefty-bookswap-project.herokuapp.com/loginsCount']
-          const result = { ...authResult, loginsCount }
+          const userId = decodedResult.sub
+          const name = decodedResult.nickname
+          const email = decodedResult.email
+          const result = {
+            ...authResult,
+            loginsCount,
+            userId,
+            name,
+            email
+          }
           resolve(result)
         } else if (err) {
           reject(err)
