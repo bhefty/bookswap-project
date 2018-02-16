@@ -26,7 +26,10 @@ describe('makeSelectAuthResult', () => {
     const authResult = fromJS({
       access_token: '123abc',
       id_token: '456def',
-      expiresIn: 1234567890
+      expiresIn: 1234567890,
+      userId: 'test|12345',
+      name: 'John Smith',
+      email: 'jsmith@example.com'
     })
     const mockedState = fromJS({
       auth: {
