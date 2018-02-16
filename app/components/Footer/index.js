@@ -1,11 +1,14 @@
 import React, { PureComponent } from 'react'
+import { withRouter } from 'react-router'
+import { compose } from 'redux'
 
 import SocialStrip from 'components/SocialStrip'
 import A from 'components/A'
 import Wrapper from './Wrapper'
 
-class Footer extends PureComponent {
+export class Footer extends PureComponent {
   render () {
+    if (this.props.location.pathname === '/') return null
     return (
       <Wrapper>
         <section>
@@ -17,4 +20,6 @@ class Footer extends PureComponent {
   }
 }
 
-export default Footer
+export default compose(
+  withRouter
+)(Footer)

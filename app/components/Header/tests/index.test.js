@@ -7,36 +7,41 @@ import { loginRequest, logout } from 'auth/actions'
 describe('<Header />', () => {
   it('should render a styled header called Wrapper', () => {
     const renderedComponent = shallow(
-      <Header />
+      <Header location={{ pathname: '/dashboard' }} />
     )
     expect(renderedComponent.find('Wrapper').length).toEqual(1)
   })
 
   it('should render 3 Links', () => {
     const renderedComponent = shallow(
-      <Header />
+      <Header location={{ pathname: '/dashboard' }} />
     )
     expect(renderedComponent.find('Link').length).toEqual(3)
   })
 
   it('should render Login button if not authenticated', () => {
     const renderedComponent = shallow(
-      <Header />
+      <Header location={{ pathname: '/dashboard' }} />
     )
     expect(renderedComponent.find('button[children="Login"]').length).toEqual(1)
   })
 
   it('should render Logout button if authenticated', () => {
     const renderedComponent = shallow(
-      <Header isAuthenticated />
+      <Header isAuthenticated location={{ pathname: '/dashboard' }} />
     )
     expect(renderedComponent.find('button[children="Logout"]').length).toEqual(1)
+  })
+
+  it('should not render if route is at /', () => {
+    const renderedComponent = shallow(<Header location={{ pathname: '/' }} />)
+    expect(renderedComponent.type()).toBe(null)
   })
 
   describe('toggleNav', () => {
     it('should toggle state of expanded from false to true', () => {
       const renderedComponent = shallow(
-        <Header />
+        <Header location={{ pathname: '/dashboard' }} />
       )
       expect(renderedComponent.state('expanded')).toBe(false)
       renderedComponent.instance().toggleNav()
@@ -45,7 +50,7 @@ describe('<Header />', () => {
 
     it('should toggle state of expanded from true to false', () => {
       const renderedComponent = shallow(
-        <Header />
+        <Header location={{ pathname: '/dashboard' }} />
       )
       expect(renderedComponent.state('expanded')).toBe(false)
       renderedComponent.setState({ expanded: true })
@@ -58,7 +63,7 @@ describe('<Header />', () => {
   describe('handleKeyDown', () => {
     it('should toggle expanded to false if escape key is pressed and expanded is true', () => {
       const renderedComponent = shallow(
-        <Header />
+        <Header location={{ pathname: '/dashboard' }} />
       )
       renderedComponent.setState({ expanded: true })
       expect(renderedComponent.state('expanded')).toBe(true)
@@ -68,7 +73,7 @@ describe('<Header />', () => {
 
     it('should not toggle expanded to false if key pressed is not escape', () => {
       const renderedComponent = shallow(
-        <Header />
+        <Header location={{ pathname: '/dashboard' }} />
       )
       expect(renderedComponent.state('expanded')).toBe(false)
       renderedComponent.instance().handleKeyDown({ keyCode: 26 })
@@ -77,7 +82,7 @@ describe('<Header />', () => {
 
     it('should not toggle expanded to false if escape key is pressed and expanded is false', () => {
       const renderedComponent = shallow(
-        <Header />
+        <Header location={{ pathname: '/dashboard' }} />
       )
       expect(renderedComponent.state('expanded')).toBe(false)
       renderedComponent.instance().handleKeyDown({ keyCode: 27 })
@@ -88,7 +93,7 @@ describe('<Header />', () => {
   describe('setExpandedFalse', () => {
     it('should set expanded to false if true', () => {
       const renderedComponent = shallow(
-        <Header />
+        <Header location={{ pathname: '/dashboard' }} />
       )
       renderedComponent.setState({ expanded: true })
       expect(renderedComponent.state('expanded')).toBe(true)
@@ -98,7 +103,7 @@ describe('<Header />', () => {
 
     it('should not set expanded to false if already false', () => {
       const renderedComponent = shallow(
-        <Header />
+        <Header location={{ pathname: '/dashboard' }} />
       )
       expect(renderedComponent.state('expanded')).toBe(false)
       renderedComponent.instance().setExpandedFalse()
