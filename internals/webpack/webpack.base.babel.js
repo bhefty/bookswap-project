@@ -91,7 +91,8 @@ module.exports = (options) => ({
         AUTH0_REDIRECT_URI: JSON.stringify(process.env.AUTH0_REDIRECT_URI),
         AUTH0_RESPONSE_TYPE: JSON.stringify(process.env.AUTH0_RESPONSE_TYPE),
         AUTH0_SCOPE: JSON.stringify(process.env.AUTH0_SCOPE)
-      }
+      },
+      'typeof window': '\'object\''
     }),
     new webpack.NamedModulesPlugin()
   ]),
@@ -111,7 +112,26 @@ module.exports = (options) => ({
   devtool: options.devtool,
   target: 'web',
   node: {
-    fs: 'empty'
+    fs: 'empty',
+    child_process: 'empty',
+    net: 'empty',
+    dns: 'empty',
+    tls: 'empty',
+    module: 'empty'
   },
+  externals: [
+    function (context, request, callback) {
+      if (request.indexOf('apollo-engine-binary') > -1) {
+        return callback(null, 'commonjs ' + request)
+      }
+      callback()
+    },
+    function (context, request, callback) {
+      if (request.indexOf('mongodb') > -1) {
+        return callback(null, 'commonjs ' + request)
+      }
+      callback()
+    }
+  ],
   performance: options.performance || {}
 })
