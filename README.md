@@ -1,6 +1,6 @@
 # Bookswap Project
 <div align='center'>
-  <img src='https://raw.githubusercontent.com/bhefty/brand/master/assets/react_boilerplate_logo.png' alt='React Redux Boilerplate logo' />
+  <img src='app/components/Header/logo_dark.png' alt='Bookswap logo' />
 </div>
 
 <br />
