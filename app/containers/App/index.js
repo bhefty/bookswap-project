@@ -1,7 +1,7 @@
 import React from 'react'
 import Helmet from 'react-helmet'
 import styled, { ThemeProvider } from 'styled-components'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import Auth from 'utils/auth'
 
@@ -9,10 +9,26 @@ import Header from 'components/Header'
 import Footer from 'components/Footer'
 import HomePage from 'containers/HomePage/Loadable'
 import FeaturePage from 'containers/FeaturePage/Loadable'
+import Dashboard from 'containers/Dashboard/Loadable'
 import CallbackPage from 'containers/CallbackPage'
 import NotFoundPage from 'containers/NotFoundPage/Loadable'
 
+import { makeSelectIsAuthenticated } from 'auth/selectors'
+
 const auth = new Auth()
+
+/* istanbul ignore next */
+const PrivateRoute = ({ component: Component, store, ...rest }) => {
+  const authSelector = makeSelectIsAuthenticated()
+  const isAuthenticated = authSelector(store.store.getState('auth'))
+  return (
+    <Route {...rest} render={(props) => (
+      isAuthenticated === true
+        ? <Component {...props} />
+        : <Redirect to='/' />
+    )} />
+  )
+}
 
 const theme = {
   primary: '#434C5E',
@@ -24,14 +40,14 @@ const theme = {
 }
 
 const AppWrapper = styled.div`
-  max-width: calc(768px + 16px * 2);
+  /* max-width: calc(768px + 16px * 2); */
   margin: 0 auto;
   display: flex;
   min-height: calc(100vh - 150px); // min height for App wrapper should account for nav and footer
   flex-direction: column;
 `
 
-export default function App () {
+export default function App (store) {
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -46,6 +62,7 @@ export default function App () {
           <Switch>
             <Route exact path='/' component={HomePage} />
             <Route path='/features' component={FeaturePage} />
+            <PrivateRoute path='/dashboard' component={Dashboard} store={store} />
             <Route path='/callback'>
               <CallbackPage auth={auth} />
             </Route>
