@@ -64,8 +64,9 @@ const AddBook = ({ userInfo, handleBookSearch, searchTitle, onBookSearchTitleCha
             book={book}
             action={{
               handleAction: () => handleAddBook(book),
-              actionType: 'add',
-              actionText: 'Add to Library'
+
+              actionText: 'Add to Library',
+              primaryButtonClass: 'btn-green'
             }}
             />
         )

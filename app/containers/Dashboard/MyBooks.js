@@ -16,8 +16,8 @@ const MyBooks = ({ userInfo, handleRemoveBookFromLibrary }) => (
               book={book}
               action={{
                 handleAction: handleRemoveBookFromLibrary,
-                actionType: 'remove',
-                actionText: 'Remove from Library'
+                actionText: 'Remove from Library',
+                primaryButtonClass: 'btn-red'
               }}
             />
           )

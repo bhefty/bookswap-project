@@ -16,8 +16,8 @@ const UserRequested = ({ userInfo, handleCancelRequest }) => (
               book={item.book}
               action={{
                 handleAction: () => handleCancelRequest(item),
-                actionType: 'cancel',
-                actionText: 'Cancel Request'
+                actionText: 'Cancel Request',
+                primaryButtonClass: 'btn-red'
               }}
             />
           )

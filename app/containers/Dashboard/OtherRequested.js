@@ -17,10 +17,10 @@ const OtherRequested = ({ userInfo, handleDenyRequest, handleAcceptRequest }) =>
               action={{
                 handleAction: () => handleAcceptRequest(item),
                 handleAdditionalAction: () => handleDenyRequest(item),
-                actionType: 'accept',
-                actionAdditionalType: 'deny',
                 actionText: 'Accept',
-                actionAdditionalText: 'Deny'
+                actionAdditionalText: 'Deny',
+                primaryButtonClass: 'btn-blue',
+                secondaryButtonClass: 'btn-red'
               }}
             />
           )
