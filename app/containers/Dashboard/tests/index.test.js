@@ -5,7 +5,22 @@ import { Dashboard } from '../index'
 
 describe('<Dashboard />', () => {
   it('should render Dashboard', () => {
-    const renderedComponent = shallow(<Dashboard />)
+    const props = {
+      dashboard: {
+        userId: 'test|12345'
+      },
+      getUserInfo: {
+        loading: false,
+        user: {
+          booksInLibrary: [],
+          booksUserRequested: [],
+          booksOtherRequested: []
+        }
+      }
+    }
+    const renderedComponent = shallow(
+      <Dashboard {...props} />
+    )
     expect(renderedComponent.length).toEqual(1)
   })
 })
