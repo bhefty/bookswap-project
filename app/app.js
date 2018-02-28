@@ -10,7 +10,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { ApolloProvider } from 'react-apollo'
-import ApolloClient from 'apollo-client-preset'
+import ApolloClient from 'apollo-boost'
 import { ConnectedRouter } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
 import FontFaceObserver from 'fontfaceobserver'
@@ -54,7 +54,7 @@ const render = () => {
     <Provider store={store}>
       <ApolloProvider client={client}>
         <ConnectedRouter history={history}>
-          <App />
+          <App store={store} />
         </ConnectedRouter>
       </ApolloProvider>
     </Provider>,

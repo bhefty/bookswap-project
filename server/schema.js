@@ -1,8 +1,6 @@
 const makeExecutableSchema = require('graphql-tools').makeExecutableSchema
 const filter = require('lodash').filter
 const includes = require('lodash').includes
-const mongoose = require('mongoose')
-const ObjectId = mongoose.Types.ObjectId
 const fetch = require('node-fetch')
 
 const User = require('./models/user')
@@ -48,7 +46,7 @@ const typeDefs = `
   }
 
   type Query {
-    user(_id: String): User
+    user(userId: String): User
     books: [Book] @cacheControl(maxAge: 240)
   }
 
@@ -63,8 +61,21 @@ const typeDefs = `
       searchTitle: String!
     ): Book
 
+    searchForNewBook (
+      searchTitle: String!
+    ): [Book]
+
+    addBookToLibrary (
+      userId: String!
+      bookId: String!
+      title: String!
+      authors: [String!]
+      description: String!
+      coverImg: String!
+    ): User
+
     removeBookFromLibrary (
-      _id: String!
+      userId: String!
       bookId: String!
     ): User
 
@@ -90,7 +101,7 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    user: (_, { _id }) => User.findOne(ObjectId(_id)),
+    user: (_, { userId }) => User.findOne({ userId }),
     books: () => Book.find({})
   },
   Mutation: {
@@ -105,21 +116,63 @@ const resolvers = {
     createBook: async (_, { searchTitle }) => {
       const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchTitle}&key=${process.env.GOOGLE_BOOKS_API_KEY}`)
       const data = await response.json()
+      const dataImg = data.items[0].volumeInfo.imageLinks.thumbnail
       const newBook = {
         bookId: data.items[0].id,
         title: data.items[0].volumeInfo.title,
         authors: data.items[0].volumeInfo.authors,
         description: data.items[0].volumeInfo.description,
-        coverImg: data.items[0].volumeInfo.imageLinks.thumbnail
+        coverImg: dataImg.substring(0, dataImg.indexOf('&zoom'))
       }
       return Book.create(newBook)
     },
-    removeBookFromLibrary: (_, { _id, bookId }) => User.findOneAndUpdate(ObjectId(_id), {
+    searchForNewBook: async (_, { searchTitle }) => {
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchTitle}&key=${process.env.GOOGLE_BOOKS_API_KEY}`)
+      const data = await response.json()
+
+      return data.items.map((book) => {
+        const bookImg = book.volumeInfo.imageLinks.thumbnail
+        return {
+          bookId: book.id,
+          title: book.volumeInfo.title,
+          authors: book.volumeInfo.authors || 'Author Unavailable',
+          description: book.volumeInfo.description || 'No description available',
+          coverImg: bookImg.substring(0, bookImg.indexOf('&zoom'))
+        }
+      })
+    },
+    addBookToLibrary: async (_, { userId, bookId, title, authors, description, coverImg }) => {
+      const newBook = {
+        bookId,
+        title,
+        authors,
+        description,
+        coverImg
+      }
+
+      const user = await User.findOne({ userId })
+      const userHasBook = includes(user.booksInLibrary, newBook.bookId)
+      if (userHasBook) {
+        throw new Error(`Requester already has book in library with id ${newBook.bookId}`)
+      }
+
+      // Adds book to collection if it does not already exist
+      const creatingBook = Book.create(newBook)
+      const updatingUser = User.findOneAndUpdate({ userId }, {
+        $push: { booksInLibrary: newBook.bookId }
+      }, { new: true })
+
+      Promise.all([creatingBook, updatingUser])
+        .then((result) => {
+          return result[1]
+        })
+    },
+    removeBookFromLibrary: (_, { userId, bookId }) => User.findOneAndUpdate({ userId }, {
       $pull: { booksInLibrary: bookId }
     }),
     requestBook: (_, { requesterId, ownerId, bookId }) => {
-      const findRequester = User.findOne({ _id: requesterId })
-      const findOwner = User.findOne({ _id: ownerId })
+      const findRequester = User.findOne({ userId: requesterId })
+      const findOwner = User.findOne({ userId: ownerId })
       const findBook = Book.findOne({ bookId })
 
       return Promise.all([findRequester, findOwner, findBook])
@@ -149,21 +202,21 @@ const resolvers = {
           }
 
           // // Remove book from owner's library and add it to the owner's books that have been requested
-          return User.findOneAndUpdate({ _id: owner._id }, {
+          return User.findOneAndUpdate({ userId: owner.userId }, {
             $pull: { booksInLibrary: bookId },
             $push: { booksOtherRequested: { bookId, requesterId } }
           }, { new: true })
             .then(() => {
               // Add Book to user's requested list
-              return User.findOneAndUpdate({ _id: requester._id }, {
+              return User.findOneAndUpdate({ userId: requester.userId }, {
                 $push: { booksUserRequested: { bookId, ownerId } }
               }, { new: true })
             })
         })
     },
     cancelRequestBook: (_, { requesterId, ownerId, bookId }) => {
-      const findRequester = User.findOne({ _id: requesterId })
-      const findOwner = User.findOne({ _id: ownerId })
+      const findRequester = User.findOne({ userId: requesterId })
+      const findOwner = User.findOne({ userId: ownerId })
       const findBook = Book.findOne({ bookId })
 
       return Promise.all([findRequester, findOwner, findBook])
@@ -183,21 +236,21 @@ const resolvers = {
           }
 
           // Add book back into owner's library and remove book owner's requested from other's list
-          return User.findOneAndUpdate({ _id: owner._id }, {
+          return User.findOneAndUpdate({ userId: owner.userId }, {
             $push: { booksInLibrary: bookId },
             $pull: { booksOtherRequested: { bookId: bookId, requesterId: requesterId } }
           }, { new: true })
             .then(() => {
               // Remove book from user's requested list
-              return User.findOneAndUpdate({ _id: requester._id }, {
+              return User.findOneAndUpdate({ userId: requester.userId }, {
                 $pull: { booksUserRequested: { bookId: bookId, ownerId: ownerId } }
               }, { new: true })
             })
         })
     },
     acceptRequest: (_, { requesterId, ownerId, bookId }) => {
-      const findRequester = User.findOne({ _id: requesterId })
-      const findOwner = User.findOne({ _id: ownerId })
+      const findRequester = User.findOne({ userId: requesterId })
+      const findOwner = User.findOne({ userId: ownerId })
       const findBook = Book.findOne({ bookId })
 
       return Promise.all([findRequester, findOwner, findBook])
@@ -217,13 +270,13 @@ const resolvers = {
           }
 
           // Remove book from requester's user request list and add it to their library
-          return User.findOneAndUpdate({ _id: requester._id }, {
+          return User.findOneAndUpdate({ userId: requester.userId }, {
             $pull: { booksUserRequested: { bookId: bookId, ownerId: ownerId } },
             $push: { booksInLibrary: bookId }
           }, { new: true })
             .then(() => {
               // Remove book from owner's requested from other's list
-              return User.findOneAndUpdate({ _id: owner._id }, {
+              return User.findOneAndUpdate({ userId: owner.userId }, {
                 $pull: { booksOtherRequested: { bookId: bookId, requesterId: requesterId } }
               }, { new: true })
             })
@@ -242,7 +295,7 @@ const resolvers = {
         if (err) throw new Error(`Could not find book with bookId ${item.bookId}`)
         return book
       })
-      const owner = User.findOne(ObjectId(item.ownerId))
+      const owner = User.findOne({ userId: item.ownerId })
       return { book, owner }
     }),
     booksOtherRequested: (user) => user.booksOtherRequested.map(item => {
@@ -250,7 +303,7 @@ const resolvers = {
         if (err) throw new Error(`Could not find book with bookId ${item.bookId}`)
         return book
       })
-      const requester = User.findOne(ObjectId(item.requesterId))
+      const requester = User.findOne({ userId: item.requesterId })
       return { book, requester }
     })
   }
