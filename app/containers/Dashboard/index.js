@@ -10,7 +10,6 @@ import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { compose } from 'redux'
 import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
 
 import injectReducer from 'utils/injectReducer'
 import { makeSelectDashboard } from './selectors'
@@ -23,41 +22,41 @@ import AddBook from './AddBook'
 import UserRequested from './UserRequested'
 import OtherRequested from './OtherRequested'
 
-export class Dashboard extends React.Component {
-  constructor (props) {
-    super(props)
-    this.updateShowSection = this.updateShowSection.bind(this)
-    this.handleAddBook = this.handleAddBook.bind(this)
-    this.refreshData = this.refreshData.bind(this)
-    this.onBookSearchTitleChange = this.onBookSearchTitleChange.bind(this)
-    this.handleCancelRequest = this.handleCancelRequest.bind(this)
-    this.handleDenyRequest = this.handleDenyRequest.bind(this)
-    this.handleAcceptRequest = this.handleAcceptRequest.bind(this)
-    this.handleRemoveBookFromLibrary = this.handleRemoveBookFromLibrary.bind(this)
-    this.handleBookSearch = this.handleBookSearch.bind(this)
+import userQuery from 'graphql/queries/userQuery.graphql'
+import searchForNewBook from 'graphql/mutations/searchForNewBook.graphql'
+import addBookToLibrary from 'graphql/mutations/addBookToLibrary.graphql'
+import acceptRequest from 'graphql/mutations/acceptRequest.graphql'
+import cancelRequestBook from 'graphql/mutations/cancelRequestBook.graphql'
+import removeBookFromLibrary from 'graphql/mutations/removeBookFromLibrary.graphql'
 
-    this.state = {
-      searchTitle: '',
-      searchResults: [],
-      showSection: 'MyBooks'
-    }
+export class Dashboard extends React.Component {
+  static propTypes = {
+    dashboard: PropTypes.shape({
+      userId: PropTypes.string.isRequired
+    }).isRequired
   }
 
-  updateShowSection (newSection) {
+  state = {
+    searchTitle: '',
+    searchResults: [],
+    showSection: 'MyBooks'
+  }
+
+  updateShowSection = (newSection) => {
     this.setState({ showSection: newSection })
   }
 
-  onBookSearchTitleChange (e) {
+  onBookSearchTitleChange = (e) => {
     this.setState({
       searchTitle: e.target.value
     })
   }
 
-  refreshData () {
+  refreshData = () => {
     this.props.getUserInfo.refetch()
   }
 
-  async handleAddBook (book) {
+  handleAddBook = async (book) => {
     await this.props.addBookToLibrary({
       variables: {
         userId: this.props.dashboard.userId,
@@ -71,7 +70,7 @@ export class Dashboard extends React.Component {
     this.refreshData()
   }
 
-  async handleBookSearch (e) {
+  handleBookSearch = async (e) => {
     e.preventDefault()
     const bookResults = await this.props.searchForNewBook({
       variables: {
@@ -81,7 +80,7 @@ export class Dashboard extends React.Component {
     this.setState({ searchResults: bookResults.data.searchForNewBook })
   }
 
-  async handleCancelRequest (item) {
+  handleCancelRequest = async (item) => {
     await this.props.cancelRequestBook({
       variables: {
         requesterId: this.props.dashboard.userId,
@@ -92,7 +91,7 @@ export class Dashboard extends React.Component {
     this.refreshData()
   }
 
-  async handleDenyRequest (item) {
+  handleDenyRequest = async (item) => {
     await this.props.cancelRequestBook({
       variables: {
         requesterId: item.requester.userId,
@@ -103,7 +102,7 @@ export class Dashboard extends React.Component {
     this.refreshData()
   }
 
-  async handleAcceptRequest (item) {
+  handleAcceptRequest = async (item) => {
     await this.props.acceptRequest({
       variables: {
         ownerId: this.props.dashboard.userId,
@@ -114,7 +113,7 @@ export class Dashboard extends React.Component {
     this.refreshData()
   }
 
-  handleRemoveBookFromLibrary (book) {
+  handleRemoveBookFromLibrary = (book) => {
     this.props.removeBookFromLibrary({
       variables: {
         userId: this.props.dashboard.userId,
@@ -180,137 +179,6 @@ export class Dashboard extends React.Component {
   }
 }
 
-Dashboard.propTypes = {
-  dashboard: PropTypes.shape({
-    userId: PropTypes.string.isRequired
-  }).isRequired
-}
-
-Dashboard.fragments = {
-  userParts: gql`
-    fragment UserParts on User {
-      _id
-      userId
-      name
-      email
-    }
-  `
-}
-
-const userQuery = gql`
-  query ($userId: String!) {
-    user(userId: $userId) {
-      ...UserParts
-      booksInLibrary {
-        bookId
-        title
-        description
-        authors
-        coverImg
-      }
-      booksUserRequested {
-        book {
-          bookId
-          title
-          description
-          authors
-          coverImg
-        }
-        owner {
-          userId
-          name
-        }
-      }
-      booksOtherRequested {
-        book {
-          bookId
-          title
-          description
-          authors
-          coverImg
-        }
-        requester {
-          userId
-          name
-        }
-      }
-    }
-  }
-  ${Dashboard.fragments.userParts}
-`
-
-const searchForNewBook = gql`
-  mutation searchForNewBook ($searchTitle: String!) {
-    searchForNewBook(searchTitle: $searchTitle) {
-      bookId
-      title
-      authors
-      description
-      coverImg
-    }
-  }
-`
-
-const addBookToLibrary = gql`
-  mutation addBookToLibrary ($userId: String!, $bookId: String!, $title: String!, $authors: [String!], $description: String!, $coverImg: String!) {
-    addBookToLibrary(userId: $userId, bookId: $bookId, title: $title, authors: $authors, description: $description, coverImg: $coverImg) {
-      userId
-      name
-      booksInLibrary {
-        bookId
-        title
-        description
-        coverImg
-      }
-    }
-  }
-`
-
-const cancelRequestBook = gql`
-  mutation cancelRequestBook ($requesterId: String!, $ownerId: String!, $bookId: String!) {
-    cancelRequestBook(requesterId: $requesterId, ownerId: $ownerId, bookId: $bookId) {
-      ...UserParts
-      booksInLibrary {
-        bookId
-        title
-        description
-        coverImg
-      }
-    }
-  }
-  ${Dashboard.fragments.userParts}
-`
-
-const acceptRequest = gql`
-  mutation acceptRequest ($requesterId: String!, $ownerId: String!, $bookId: String!) {
-    acceptRequest(requesterId: $requesterId, ownerId: $ownerId, bookId: $bookId) {
-      ...UserParts
-      booksInLibrary {
-        bookId
-        title
-        description
-        coverImg
-      }
-    }
-  }
-  ${Dashboard.fragments.userParts}
-`
-
-const removeBookFromLibrary = gql`
-  mutation removeBookFromLibrary ($userId: String!, $bookId: String!) {
-    removeBookFromLibrary(userId: $userId, bookId: $bookId) {
-      ...UserParts
-      booksInLibrary {
-        bookId
-        title
-        description
-        coverImg
-      }
-    }
-  }
-  ${Dashboard.fragments.userParts}
-`
-
 const withUserQuery = graphql(
   userQuery, {
     options: (props) => ({
@@ -356,11 +224,7 @@ const mapStateToProps = createStructuredSelector({
   dashboard: makeSelectDashboard()
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  dispatch
-})
-
-const withConnect = connect(mapStateToProps, mapDispatchToProps)
+const withConnect = connect(mapStateToProps, null)
 
 const withReducer = injectReducer({ key: 'dashboard', reducer })
 
