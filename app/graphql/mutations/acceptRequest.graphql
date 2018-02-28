@@ -1,0 +1,13 @@
+#import '../fragments/UserParts.graphql'
+
+mutation acceptRequest ($requesterId: String!, $ownerId: String!, $bookId: String!) {
+  acceptRequest(requesterId: $requesterId, ownerId: $ownerId, bookId: $bookId) {
+    ...UserParts
+    booksInLibrary {
+      bookId
+      title
+      description
+      coverImg
+    }
+  }
+}

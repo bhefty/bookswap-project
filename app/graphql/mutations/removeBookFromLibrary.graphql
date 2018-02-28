@@ -1,0 +1,13 @@
+#import '../fragments/UserParts.graphql'
+
+mutation removeBookFromLibrary ($userId: String!, $bookId: String!) {
+  removeBookFromLibrary(userId: $userId, bookId: $bookId) {
+    ...UserParts
+    booksInLibrary {
+      bookId
+      title
+      description
+      coverImg
+    }
+  }
+}

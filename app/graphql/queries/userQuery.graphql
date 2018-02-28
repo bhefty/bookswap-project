@@ -1,0 +1,40 @@
+#import '../fragments/UserParts.graphql'
+
+query ($userId: String!) {
+  user(userId: $userId) {
+    ...UserParts
+    booksInLibrary {
+      bookId
+      title
+      description
+      authors
+      coverImg
+    }
+    booksUserRequested {
+      book {
+        bookId
+        title
+        description
+        authors
+        coverImg
+      }
+      owner {
+        userId
+        name
+      }
+    }
+    booksOtherRequested {
+      book {
+        bookId
+        title
+        description
+        authors
+        coverImg
+      }
+      requester {
+        userId
+        name
+      }
+    }
+  }
+}

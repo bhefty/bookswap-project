@@ -1,0 +1,9 @@
+mutation searchForNewBook ($searchTitle: String!) {
+  searchForNewBook(searchTitle: $searchTitle) {
+    bookId
+    title
+    authors
+    description
+    coverImg
+  }
+}

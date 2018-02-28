@@ -1,0 +1,13 @@
+#import '../fragments/UserParts.graphql'
+
+mutation cancelRequestBook ($requesterId: String!, $ownerId: String!, $bookId: String!) {
+  cancelRequestBook(requesterId: $requesterId, ownerId: $ownerId, bookId: $bookId) {
+    ...UserParts
+    booksInLibrary {
+      bookId
+      title
+      description
+      coverImg
+    }
+  }
+}
