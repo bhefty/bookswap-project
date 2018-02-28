@@ -7,6 +7,7 @@ describe('<BookCard />', () => {
   it('should render component', () => {
     const props = {
       book: {
+        bookId: 'book1234',
         title: 'Test',
         authors: ['John Smith'],
         coverImg: 'test.jpg'
@@ -26,6 +27,7 @@ describe('<BookCard />', () => {
   it('should render component with secondary actions', () => {
     const props = {
       book: {
+        bookId: 'book1234',
         title: 'Test',
         authors: ['John Smith'],
         coverImg: 'test.jpg'
@@ -49,6 +51,7 @@ describe('<BookCard />', () => {
   it('should call handleAction and handleAdditionalAction for buttons', () => {
     const props = {
       book: {
+        bookId: 'book1234',
         title: 'Test',
         authors: ['John Smith'],
         coverImg: 'test.jpg'

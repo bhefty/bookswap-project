@@ -40,6 +40,7 @@ function BookCard ({ book, action }) {
 
 BookCard.propTypes = {
   book: PropTypes.shape({
+    bookId: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
     coverImg: PropTypes.string.isRequired
