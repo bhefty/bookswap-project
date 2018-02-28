@@ -16,6 +16,7 @@ import { makeSelectDashboard } from './selectors'
 import reducer from './reducer'
 import Wrapper from './Wrapper'
 
+import LoadingIndicator from 'components/LoadingIndicator'
 import DashNav from 'components/DashNav'
 import MyBooks from './MyBooks'
 import AddBook from './AddBook'
@@ -164,7 +165,7 @@ export class Dashboard extends React.Component {
         )
         break
     }
-    if (this.props.getUserInfo.loading) return <div>Loading</div>
+    if (this.props.getUserInfo.loading) return <LoadingIndicator />
     return (
       <Wrapper>
         <DashNav
@@ -181,11 +182,12 @@ export class Dashboard extends React.Component {
 
 const withUserQuery = graphql(
   userQuery, {
-    options: (props) => ({
-      variables: {
-        userId: props.dashboard.userId
-      }
-    }),
+    options: /* istanbul ignore next */
+      (props) => ({
+        variables: {
+          userId: props.dashboard.userId
+        }
+      }),
     name: 'getUserInfo'
   }
 )
