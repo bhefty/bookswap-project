@@ -1,7 +1,8 @@
+#import '../fragments/UserParts.graphql'
+
 mutation addBookToLibrary ($userId: String!, $bookId: String!, $title: String!, $authors: [String!], $description: String!, $coverImg: String!) {
   addBookToLibrary(userId: $userId, bookId: $bookId, title: $title, authors: $authors, description: $description, coverImg: $coverImg) {
-    userId
-    name
+    ...UserParts
     booksInLibrary {
       bookId
       title

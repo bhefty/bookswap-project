@@ -22,6 +22,7 @@ import MyBooks from './MyBooks'
 import AddBook from './AddBook'
 import UserRequested from './UserRequested'
 import OtherRequested from './OtherRequested'
+import Profile from './Profile'
 
 import userQuery from 'graphql/queries/userQuery.graphql'
 import searchForNewBook from 'graphql/mutations/searchForNewBook.graphql'
@@ -29,6 +30,8 @@ import addBookToLibrary from 'graphql/mutations/addBookToLibrary.graphql'
 import acceptRequest from 'graphql/mutations/acceptRequest.graphql'
 import cancelRequestBook from 'graphql/mutations/cancelRequestBook.graphql'
 import removeBookFromLibrary from 'graphql/mutations/removeBookFromLibrary.graphql'
+import editUserEmail from 'graphql/mutations/editUserEmail.graphql'
+import editUserLocation from 'graphql/mutations/editUserLocation.graphql'
 
 export class Dashboard extends React.Component {
   static propTypes = {
@@ -40,7 +43,9 @@ export class Dashboard extends React.Component {
   state = {
     searchTitle: '',
     searchResults: [],
-    showSection: 'MyBooks'
+    showSection: 'MyBooks',
+    editUserEmailValue: '',
+    editUserLocationValue: ''
   }
 
   updateShowSection = (newSection) => {
@@ -124,6 +129,55 @@ export class Dashboard extends React.Component {
     this.refreshData()
   }
 
+  handleEditProfile = async () => {
+    const { editUserEmailValue, editUserLocationValue } = this.state
+    const { email, location } = this.props.getUserInfo.user
+    if (editUserEmailValue !== email && editUserEmailValue !== '') {
+      await this.props.editUserEmail({
+        variables: {
+          userId: this.props.dashboard.userId,
+          email: editUserEmailValue
+        }
+      })
+      this.setState({
+        editUserEmailValue: ''
+      })
+    }
+    if (editUserLocationValue !== location && editUserLocationValue !== '') {
+      await this.props.editUserLocation({
+        variables: {
+          userId: this.props.dashboard.userId,
+          location: editUserLocationValue
+        }
+      })
+      this.setState({
+        editUserLocationValue: ''
+      })
+    }
+    if ((editUserEmailValue !== email && editUserEmailValue !== '') || (editUserLocationValue !== location && editUserLocationValue !== '')) {
+      this.refreshData()
+    }
+  }
+
+  handleCancelEditProfile = () => {
+    this.setState({
+      editUserEmailValue: '',
+      editUserLocationValue: ''
+    })
+  }
+
+  onUserEmailChange = (e) => {
+    this.setState({
+      editUserEmailValue: e.target.value
+    })
+  }
+
+  onUserLocationChange = (e) => {
+    this.setState({
+      editUserLocationValue: e.target.value
+    })
+  }
+
   render () {
     let renderedContent = null
     switch (this.state.showSection) {
@@ -164,6 +218,18 @@ export class Dashboard extends React.Component {
           />
         )
         break
+      case 'Profile':
+        renderedContent = (
+          <Profile
+            userInfo={this.props.getUserInfo.user}
+            editEmail={this.state.editUserEmailValue}
+            editLocation={this.state.editUserLocationValue}
+            handleEditProfile={this.handleEditProfile}
+            handleCancelEditProfile={this.handleCancelEditProfile}
+            onUserEmailChange={this.onUserEmailChange}
+            onUserLocationChange={this.onUserLocationChange}
+          />
+        )
     }
     if (this.props.getUserInfo.loading) return <LoadingIndicator />
     return (
@@ -222,6 +288,18 @@ const withRemoveBookFromLibrary = graphql(
   }
 )
 
+const withEditUserEmail = graphql(
+  editUserEmail, {
+    name: 'editUserEmail'
+  }
+)
+
+const withEditUserLocation = graphql(
+  editUserLocation, {
+    name: 'editUserLocation'
+  }
+)
+
 const mapStateToProps = createStructuredSelector({
   dashboard: makeSelectDashboard()
 })
@@ -238,5 +316,7 @@ export default compose(
   withAddBookToLibraryMutation,
   withCancelRequestBook,
   withAcceptRequest,
-  withRemoveBookFromLibrary
+  withRemoveBookFromLibrary,
+  withEditUserEmail,
+  withEditUserLocation
 )(Dashboard)

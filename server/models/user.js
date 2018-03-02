@@ -9,6 +9,7 @@ const UserSchema = new Schema({
   },
   name: { type: String, required: true },
   email: { type: String },
+  location: { type: String },
   booksInLibrary: [{ type: String }],
   booksUserRequested: [{
     bookId: { type: String },
