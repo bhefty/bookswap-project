@@ -46,12 +46,14 @@ export default class Auth {
           const userId = decodedResult.sub
           const name = decodedResult.name || decodedResult.nickname
           const email = decodedResult.email
+          const location = null
           const result = {
             ...authResult,
             loginsCount,
             userId,
             name,
-            email
+            email,
+            location
           }
           resolve(result)
         } else if (err) {

@@ -27,20 +27,22 @@ export class CallbackPage extends React.Component {
             expiresIn: result.expiresIn,
             userId: result.userId,
             name: result.name,
-            email: result.email
+            email: result.email,
+            location: result.location
           }
 
           this.props.session(authResult)
           return result.loginsCount
         })
         .then(loginsCount => {
-          const { userId, name, email } = this.props.userInfo
+          const { userId, name, email, location } = this.props.userInfo
           if (loginsCount <= 1) {
             this.props.createUser({
               variables: {
                 userId,
                 name,
-                email
+                email,
+                location
               }
             })
           }
