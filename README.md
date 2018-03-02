@@ -1,10 +1,3 @@
-# Bookswap Project
-<div align='center'>
-  <img src='app/components/Header/logo_dark.png' alt='Bookswap logo' />
-</div>
-
-<br />
-
 <div align='center'>
 <!-- Build status -->
 <a href='https://circleci.com/gh/bhefty/bookswap-project' target='_blank'>
@@ -28,6 +21,13 @@
 </a>
 </div>
 
+# Bookswap Project
+<div align='center'>
+  <img src='app/components/Header/logo_dark.png' alt='Bookswap logo' />
+</div>
+
+<br />
+
 <div align='center'>
   <sub>This project mimics a book trading club. Manage your library and trade books with other users.</sub>
 </div>
@@ -37,6 +37,6 @@
 ## User Stories
 
 - [ ] I can view all books posted by every user
-- [ ] I can add a new book
+- [x] I can add a new book
 - [ ] I can update my settings to store my full name, city and state
 - [ ] I can propose a trade and wait for the other user to accept the trade
