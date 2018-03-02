@@ -52,6 +52,7 @@ describe('<Dashboard />', () => {
       getUserInfo: {
         loading: false,
         user: {
+          userId: 'teest|12345',
           booksInLibrary: [],
           booksUserRequested: [],
           booksOtherRequested: []
@@ -75,6 +76,10 @@ describe('<Dashboard />', () => {
       showSection: 'OtherRequested'
     })
     expect(renderedComponent.find('OtherRequested').length).toEqual(1)
+    renderedComponent.setState({
+      showSection: 'Profile'
+    })
+    expect(renderedComponent.find('Profile').length).toEqual(1)
   })
 
   describe('updateShowSection', () => {
@@ -364,6 +369,206 @@ describe('<Dashboard />', () => {
       renderedComponent.instance().handleRemoveBookFromLibrary(fixture)
       expect(props.removeBookFromLibrary).toHaveBeenCalled()
       expect(props.getUserInfo.refetch).toHaveBeenCalled()
+    })
+  })
+
+  describe('handleEditProfile', () => {
+    it('should do nothing if user has not changed email or location', async () => {
+      const props = {
+        dashboard: {
+          userId: 'test|12345'
+        },
+        getUserInfo: {
+          loading: false,
+          user: {
+            email: 'test@me.com',
+            location: 'Austin, TX',
+            booksInLibrary: [],
+            booksUserRequested: [],
+            booksOtherRequested: []
+          },
+          refetch: jest.fn()
+        },
+        editUserEmail: jest.fn(),
+        editUserLocation: jest.fn()
+      }
+      const renderedComponent = mount(
+        <Dashboard {...props} />
+      )
+
+      await renderedComponent.instance().handleEditProfile()
+      expect(props.editUserEmail).not.toHaveBeenCalled()
+      expect(props.editUserLocation).not.toHaveBeenCalled()
+      expect(props.getUserInfo.refetch).not.toHaveBeenCalled()
+    })
+
+    it('should call editUserEmail if user has changed email', async () => {
+      const props = {
+        dashboard: {
+          userId: 'test|12345'
+        },
+        getUserInfo: {
+          loading: false,
+          user: {
+            email: 'test@me.com',
+            location: 'Austin, TX',
+            booksInLibrary: [],
+            booksUserRequested: [],
+            booksOtherRequested: []
+          },
+          refetch: jest.fn()
+        },
+        editUserEmail: jest.fn(),
+        editUserLocation: jest.fn()
+      }
+      const renderedComponent = mount(
+        <Dashboard {...props} />
+      )
+
+      renderedComponent.setState({
+        editUserEmailValue: 'not@me.com'
+      })
+
+      await renderedComponent.instance().handleEditProfile()
+      expect(props.editUserEmail).toHaveBeenCalled()
+      expect(props.editUserLocation).not.toHaveBeenCalled()
+      expect(props.getUserInfo.refetch).toHaveBeenCalled()
+    })
+
+    it('should call editUserLocation if user has changed email', async () => {
+      const props = {
+        dashboard: {
+          userId: 'test|12345'
+        },
+        getUserInfo: {
+          loading: false,
+          user: {
+            email: 'test@me.com',
+            location: 'Austin, TX',
+            booksInLibrary: [],
+            booksUserRequested: [],
+            booksOtherRequested: []
+          },
+          refetch: jest.fn()
+        },
+        editUserEmail: jest.fn(),
+        editUserLocation: jest.fn()
+      }
+      const renderedComponent = mount(
+        <Dashboard {...props} />
+      )
+
+      renderedComponent.setState({
+        editUserLocationValue: 'Dallas, TX'
+      })
+
+      await renderedComponent.instance().handleEditProfile()
+      expect(props.editUserEmail).not.toHaveBeenCalled()
+      expect(props.editUserLocation).toHaveBeenCalled()
+      expect(props.getUserInfo.refetch).toHaveBeenCalled()
+    })
+  })
+
+  describe('handleCancelEditProfile', () => {
+    it('should reset state for editUserEmailValue and editUserLocationValue', () => {
+      const props = {
+        dashboard: {
+          userId: 'test|12345'
+        },
+        getUserInfo: {
+          loading: false,
+          user: {
+            booksInLibrary: [],
+            booksUserRequested: [],
+            booksOtherRequested: []
+          },
+          refetch: jest.fn()
+        }
+      }
+      const renderedComponent = mount(
+        <Dashboard {...props} />
+      )
+
+      expect(renderedComponent.state().editUserEmailValue).toEqual('')
+      expect(renderedComponent.state().editUserLocationValue).toEqual('')
+
+      renderedComponent.setState({
+        editUserEmailValue: 'test@me.com',
+        editUserLocationValue: 'Austin, TX'
+      })
+
+      expect(renderedComponent.state().editUserEmailValue).toEqual('test@me.com')
+      expect(renderedComponent.state().editUserLocationValue).toEqual('Austin, TX')
+
+      renderedComponent.instance().handleCancelEditProfile()
+      expect(renderedComponent.state().editUserEmailValue).toEqual('')
+      expect(renderedComponent.state().editUserLocationValue).toEqual('')
+    })
+  })
+
+  describe('onUserEmailChange', () => {
+    it('should update state for editUserEmailValue', () => {
+      const props = {
+        dashboard: {
+          userId: 'test|12345'
+        },
+        getUserInfo: {
+          loading: false,
+          user: {
+            booksInLibrary: [],
+            booksUserRequested: [],
+            booksOtherRequested: []
+          },
+          refetch: jest.fn()
+        }
+      }
+      const renderedComponent = mount(
+        <Dashboard {...props} />
+      )
+
+      const fixture = {
+        target: {
+          value: 'test@me.com'
+        }
+      }
+
+      expect(renderedComponent.state().editUserEmailValue).toEqual('')
+
+      renderedComponent.instance().onUserEmailChange(fixture)
+      expect(renderedComponent.state().editUserEmailValue).toEqual(fixture.target.value)
+    })
+  })
+
+  describe('onUserLocationChange', () => {
+    it('should update state for editUserLocationValue', () => {
+      const props = {
+        dashboard: {
+          userId: 'test|12345'
+        },
+        getUserInfo: {
+          loading: false,
+          user: {
+            booksInLibrary: [],
+            booksUserRequested: [],
+            booksOtherRequested: []
+          },
+          refetch: jest.fn()
+        }
+      }
+      const renderedComponent = mount(
+        <Dashboard {...props} />
+      )
+
+      const fixture = {
+        target: {
+          value: 'Austin, TX'
+        }
+      }
+
+      expect(renderedComponent.state().editUserLocationValue).toEqual('')
+
+      renderedComponent.instance().onUserLocationChange(fixture)
+      expect(renderedComponent.state().editUserLocationValue).toEqual(fixture.target.value)
     })
   })
 })
