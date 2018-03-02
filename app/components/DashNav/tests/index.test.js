@@ -7,6 +7,7 @@ describe('<DashNav />', () => {
   it('should render component', () => {
     const props = {
       userInfo: {
+        userId: 'test|12345',
         booksInLibrary: [],
         booksUserRequested: [],
         booksOtherRequested: []
@@ -22,6 +23,7 @@ describe('<DashNav />', () => {
   it('should handle updateShowSection function', () => {
     const props = {
       userInfo: {
+        userId: 'test|12345',
         booksInLibrary: [],
         booksUserRequested: [],
         booksOtherRequested: []
@@ -47,5 +49,9 @@ describe('<DashNav />', () => {
     renderedComponent.find('#sidebar-btn-requests').simulate('click')
     expect(props.updateShowSection.mock.calls.length).toEqual(4)
     expect(props.updateShowSection).toHaveBeenCalledWith('OtherRequested')
+
+    renderedComponent.find('#sidebar-btn-profile').simulate('click')
+    expect(props.updateShowSection.mock.calls.length).toEqual(5)
+    expect(props.updateShowSection).toHaveBeenCalledWith('Profile')
   })
 })
