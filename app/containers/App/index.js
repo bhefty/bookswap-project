@@ -10,6 +10,7 @@ import Footer from 'components/Footer'
 import HomePage from 'containers/HomePage/Loadable'
 import FeaturePage from 'containers/FeaturePage/Loadable'
 import Dashboard from 'containers/Dashboard/Loadable'
+import BrowseBooks from 'containers/BrowseBooks/Loadable'
 import CallbackPage from 'containers/CallbackPage'
 import NotFoundPage from 'containers/NotFoundPage/Loadable'
 
@@ -63,6 +64,7 @@ export default function App (store) {
             <Route exact path='/' component={HomePage} />
             <Route path='/features' component={FeaturePage} />
             <PrivateRoute path='/dashboard' component={Dashboard} store={store} />
+            <Route path='/books' component={BrowseBooks} />
             <Route path='/callback'>
               <CallbackPage auth={auth} />
             </Route>
