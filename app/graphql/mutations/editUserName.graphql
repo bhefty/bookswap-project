@@ -1,0 +1,7 @@
+#import '../fragments/UserParts.graphql'
+
+mutation editUserName ($userId: String!, $name: String!) {
+  editUserName(userId: $userId, name: $name) {
+    ...UserParts
+  }
+}

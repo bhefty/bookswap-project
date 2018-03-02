@@ -58,6 +58,11 @@ const typeDefs = `
       email: String
     ): User
 
+    editUserName (
+      userId: String!
+      name: String!
+    ): User
+
     editUserEmail (
       userId: String!
       email: String!
@@ -125,6 +130,11 @@ const resolvers = {
       booksUserRequested: [],
       booksOtherRequested: []
     }),
+    editUserName: (_, { userId, name }) => User.findOneAndUpdate({
+      userId
+    }, {
+      $set: { name }
+    }, { upsert: true, new: true }),
     editUserEmail: (_, { userId, email }) => User.findOneAndUpdate({
       userId
     }, {
