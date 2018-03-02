@@ -1,0 +1,7 @@
+#import '../fragments/UserParts.graphql'
+
+mutation editUserLocation ($userId: String!, $location: String!) {
+  editUserLocation(userId: $userId, location: $location) {
+    ...UserParts
+  }
+}
