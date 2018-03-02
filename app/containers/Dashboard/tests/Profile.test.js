@@ -12,10 +12,12 @@ describe('<Profile />', () => {
         email: 'test@me.com',
         location: 'Austin, TX'
       },
+      editName: '',
       editEmail: '',
       editLocation: '',
       handleEditProfile: jest.fn(),
       handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
       onUserEmailChange: jest.fn(),
       onUserLocationChange: jest.fn()
     }
@@ -23,6 +25,52 @@ describe('<Profile />', () => {
       <Profile {...props} />
     )
     expect(renderedComponent.length).toEqual(1)
+  })
+
+  it('should render name input placeholder with user.name', () => {
+    const props = {
+      userInfo: {
+        userId: 'test|12345',
+        name: 'John Smith',
+        email: 'test@me.com',
+        location: 'Austin, TX'
+      },
+      editName: '',
+      editEmail: '',
+      editLocation: '',
+      handleEditProfile: jest.fn(),
+      handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
+      onUserEmailChange: jest.fn(),
+      onUserLocationChange: jest.fn()
+    }
+    const renderedComponent = shallow(
+      <Profile {...props} />
+    )
+    expect(renderedComponent.find('#profile-input-name').props().placeholder).toEqual(props.userInfo.name)
+  })
+
+  it('should render name input placeholder with message if user.name is null', () => {
+    const props = {
+      userInfo: {
+        userId: 'test|12345',
+        name: null,
+        email: 'test@me.com',
+        location: 'Austin, TX'
+      },
+      editName: '',
+      editEmail: '',
+      editLocation: '',
+      handleEditProfile: jest.fn(),
+      handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
+      onUserEmailChange: jest.fn(),
+      onUserLocationChange: jest.fn()
+    }
+    const renderedComponent = shallow(
+      <Profile {...props} />
+    )
+    expect(renderedComponent.find('#profile-input-name').props().placeholder).toEqual('Please enter a name')
   })
 
   it('should render email input placeholder with user.email', () => {
@@ -33,10 +81,12 @@ describe('<Profile />', () => {
         email: 'test@me.com',
         location: 'Austin, TX'
       },
+      editName: '',
       editEmail: '',
       editLocation: '',
       handleEditProfile: jest.fn(),
       handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
       onUserEmailChange: jest.fn(),
       onUserLocationChange: jest.fn()
     }
@@ -54,10 +104,12 @@ describe('<Profile />', () => {
         email: null,
         location: 'Austin, TX'
       },
+      editName: '',
       editEmail: '',
       editLocation: '',
       handleEditProfile: jest.fn(),
       handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
       onUserEmailChange: jest.fn(),
       onUserLocationChange: jest.fn()
     }
@@ -75,10 +127,12 @@ describe('<Profile />', () => {
         email: 'test@me.com',
         location: 'Austin, TX'
       },
+      editName: '',
       editEmail: '',
       editLocation: '',
       handleEditProfile: jest.fn(),
       handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
       onUserEmailChange: jest.fn(),
       onUserLocationChange: jest.fn()
     }
@@ -96,10 +150,12 @@ describe('<Profile />', () => {
         email: 'test@me.com',
         location: null
       },
+      editName: '',
       editEmail: '',
       editLocation: '',
       handleEditProfile: jest.fn(),
       handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
       onUserEmailChange: jest.fn(),
       onUserLocationChange: jest.fn()
     }
@@ -117,10 +173,12 @@ describe('<Profile />', () => {
         email: 'test@me.com',
         location: 'Austin, TX'
       },
+      editName: '',
       editEmail: '',
       editLocation: '',
       handleEditProfile: jest.fn(),
       handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
       onUserEmailChange: jest.fn(),
       onUserLocationChange: jest.fn()
     }
@@ -140,10 +198,12 @@ describe('<Profile />', () => {
         email: 'test@me.com',
         location: 'Austin, TX'
       },
+      editName: '',
       editEmail: '',
       editLocation: '',
       handleEditProfile: jest.fn(),
       handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
       onUserEmailChange: jest.fn(),
       onUserLocationChange: jest.fn()
     }
@@ -155,6 +215,31 @@ describe('<Profile />', () => {
     expect(props.handleEditProfile.mock.calls.length).toEqual(1)
   })
 
+  it('should handle onUserNameChange', () => {
+    const props = {
+      userInfo: {
+        userId: 'test|12345',
+        name: 'John Smith',
+        email: 'test@me.com',
+        location: 'Austin, TX'
+      },
+      editName: '',
+      editEmail: '',
+      editLocation: '',
+      handleEditProfile: jest.fn(),
+      handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
+      onUserEmailChange: jest.fn(),
+      onUserLocationChange: jest.fn()
+    }
+    const renderedComponent = mount(
+      <Profile {...props} />
+    )
+
+    renderedComponent.find('#profile-input-name').simulate('change')
+    expect(props.onUserNameChange.mock.calls.length).toEqual(1)
+  })
+
   it('should handle onUserEmailChange', () => {
     const props = {
       userInfo: {
@@ -163,10 +248,12 @@ describe('<Profile />', () => {
         email: 'test@me.com',
         location: 'Austin, TX'
       },
+      editName: '',
       editEmail: '',
       editLocation: '',
       handleEditProfile: jest.fn(),
       handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
       onUserEmailChange: jest.fn(),
       onUserLocationChange: jest.fn()
     }
@@ -186,10 +273,12 @@ describe('<Profile />', () => {
         email: 'test@me.com',
         location: 'Austin, TX'
       },
+      editName: '',
       editEmail: '',
       editLocation: '',
       handleEditProfile: jest.fn(),
       handleCancelEditProfile: jest.fn(),
+      onUserNameChange: jest.fn(),
       onUserEmailChange: jest.fn(),
       onUserLocationChange: jest.fn()
     }
