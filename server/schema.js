@@ -12,6 +12,7 @@ const typeDefs = `
     userId: String!
     name: String
     email: String
+    location: String
     """
     The list of Books this user has in their library
     """
@@ -55,6 +56,16 @@ const typeDefs = `
       userId: String!
       name: String
       email: String
+    ): User
+
+    editUserEmail (
+      userId: String!
+      email: String!
+    ): User
+
+    editUserLocation (
+      userId: String!
+      location: String!
     ): User
 
     createBook (
@@ -105,14 +116,25 @@ const resolvers = {
     books: () => Book.find({})
   },
   Mutation: {
-    createUser: (_, { userId, name, email }) => User.create({
+    createUser: (_, { userId, name, email, location }) => User.create({
       userId,
       name,
       email,
+      location,
       booksInLibrary: [],
       booksUserRequested: [],
       booksOtherRequested: []
     }),
+    editUserEmail: (_, { userId, email }) => User.findOneAndUpdate({
+      userId
+    }, {
+      $set: { email }
+    }, { upsert: true, new: true }),
+    editUserLocation: (_, { userId, location }) => User.findOneAndUpdate({
+      userId
+    }, {
+      $set: { location }
+    }, { upsert: true, new: true }),
     createBook: async (_, { searchTitle }) => {
       const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchTitle}&key=${process.env.GOOGLE_BOOKS_API_KEY}`)
       const data = await response.json()
