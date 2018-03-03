@@ -1,0 +1,20 @@
+#import '../fragments/UserParts.graphql'
+
+mutation requestBook ($requesterId: String!, $ownerId: String!, $bookId: String!) {
+  requestBook(requesterId: $requesterId, ownerId: $ownerId, bookId: $bookId) {
+    ...UserParts
+    booksUserRequested {
+      book {
+        bookId
+        title
+        description
+        authors
+        coverImg
+      }
+      owner {
+        userId
+        name
+      }
+    }
+  }
+}

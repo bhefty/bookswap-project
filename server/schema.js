@@ -3,7 +3,7 @@ const filter = require('lodash').filter
 const includes = require('lodash').includes
 const fetch = require('node-fetch')
 
-const User = require('./models/user')
+const User = require('./models/user').model
 const Book = require('./models/book')
 
 const typeDefs = `
@@ -44,11 +44,12 @@ const typeDefs = `
     description: String
     authors: [String]
     coverImg: String
+    owners: [User]
   }
 
   type Query {
-    user(userId: String): User
-    books: [Book] @cacheControl(maxAge: 240)
+    user(userId: String!): User
+    books: [Book]
   }
 
   type Mutation {
@@ -154,7 +155,8 @@ const resolvers = {
         title: data.items[0].volumeInfo.title,
         authors: data.items[0].volumeInfo.authors,
         description: data.items[0].volumeInfo.description,
-        coverImg: dataImg.substring(0, dataImg.indexOf('&zoom'))
+        coverImg: dataImg.substring(0, dataImg.indexOf('&zoom')),
+        owners: []
       }
       return Book.create(newBook)
     },
@@ -174,24 +176,25 @@ const resolvers = {
       })
     },
     addBookToLibrary: async (_, { userId, bookId, title, authors, description, coverImg }) => {
-      const newBook = {
+      const user = await User.findOne({ userId })
+      const userHasBook = includes(user.booksInLibrary, bookId)
+      if (userHasBook) {
+        throw new Error(`Requester already has book in library with id ${bookId}`)
+      }
+
+      // Adds book to collection if it does not already exist
+      const creatingBook = Book.findOneAndUpdate({
+        bookId
+      }, {
         bookId,
         title,
         authors,
         description,
-        coverImg
-      }
-
-      const user = await User.findOne({ userId })
-      const userHasBook = includes(user.booksInLibrary, newBook.bookId)
-      if (userHasBook) {
-        throw new Error(`Requester already has book in library with id ${newBook.bookId}`)
-      }
-
-      // Adds book to collection if it does not already exist
-      const creatingBook = Book.create(newBook)
+        coverImg,
+        $push: { owners: user }
+      }, { upsert: true, new: true })
       const updatingUser = User.findOneAndUpdate({ userId }, {
-        $push: { booksInLibrary: newBook.bookId }
+        $push: { booksInLibrary: bookId }
       }, { new: true })
 
       Promise.all([creatingBook, updatingUser])
@@ -199,9 +202,21 @@ const resolvers = {
           return result[1]
         })
     },
-    removeBookFromLibrary: (_, { userId, bookId }) => User.findOneAndUpdate({ userId }, {
-      $pull: { booksInLibrary: bookId }
-    }),
+    removeBookFromLibrary: async (_, { userId, bookId }) => {
+      const updatedBook = await Book.findOneAndUpdate({
+        bookId
+      }, {
+        $pull: { owners: { userId: userId } }
+      }, { new: true })
+
+      // Delete book from database if no more users own it
+      if (updatedBook.owners.length === 0) {
+        await Book.deleteOne({ bookId })
+      }
+      return User.findOneAndUpdate({ userId }, {
+        $pull: { booksInLibrary: bookId }
+      }, { new: true })
+    },
     requestBook: (_, { requesterId, ownerId, bookId }) => {
       const findRequester = User.findOne({ userId: requesterId })
       const findOwner = User.findOne({ userId: ownerId })
@@ -233,7 +248,7 @@ const resolvers = {
             throw new Error(`Requester already has already requested book with id ${bookId} from owner with id ${ownerId}`)
           }
 
-          // // Remove book from owner's library and add it to the owner's books that have been requested
+          // Remove book from owner's library and add it to the owner's books that have been requested
           return User.findOneAndUpdate({ userId: owner.userId }, {
             $pull: { booksInLibrary: bookId },
             $push: { booksOtherRequested: { bookId, requesterId } }
@@ -301,16 +316,27 @@ const resolvers = {
             throw new Error(`Couldn't find the book with id ${bookId}`)
           }
 
-          // Remove book from requester's user request list and add it to their library
-          return User.findOneAndUpdate({ userId: requester.userId }, {
-            $pull: { booksUserRequested: { bookId: bookId, ownerId: ownerId } },
-            $push: { booksInLibrary: bookId }
+          // Transfer ownership in Book
+          return Book.findOneAndUpdate({ bookId }, {
+            $pull: { owners: { userId: ownerId } }
           }, { new: true })
             .then(() => {
-              // Remove book from owner's requested from other's list
-              return User.findOneAndUpdate({ userId: owner.userId }, {
-                $pull: { booksOtherRequested: { bookId: bookId, requesterId: requesterId } }
+              return Book.findOneAndUpdate({ bookId }, {
+                $push: { owners: requester }
               }, { new: true })
+            })
+            .then(() => {
+              // Remove book from requester's user request list and add it to their library
+              return User.findOneAndUpdate({ userId: requester.userId }, {
+                $pull: { booksUserRequested: { bookId: bookId, ownerId: ownerId } },
+                $push: { booksInLibrary: bookId }
+              }, { new: true })
+                .then(() => {
+                  // Remove book from owner's requested from other's list
+                  return User.findOneAndUpdate({ userId: owner.userId }, {
+                    $pull: { booksOtherRequested: { bookId: bookId, requesterId: requesterId } }
+                  }, { new: true })
+                })
             })
         })
     }

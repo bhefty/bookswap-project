@@ -4,7 +4,6 @@ const Schema = mongoose.Schema
 const UserSchema = new Schema({
   userId: {
     type: String,
-    unique: true,
     required: true
   },
   name: { type: String, required: true },
@@ -21,4 +20,7 @@ const UserSchema = new Schema({
   }]
 })
 
-module.exports = mongoose.model('User', UserSchema)
+module.exports = {
+  schema: UserSchema,
+  model: mongoose.model('User', UserSchema)
+}

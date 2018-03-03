@@ -121,8 +121,8 @@ export class Dashboard extends React.Component {
     this.refreshData()
   }
 
-  handleRemoveBookFromLibrary = (book) => {
-    this.props.removeBookFromLibrary({
+  handleRemoveBookFromLibrary = async (book) => {
+    await this.props.removeBookFromLibrary({
       variables: {
         userId: this.props.dashboard.userId,
         bookId: book.bookId

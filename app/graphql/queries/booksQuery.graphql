@@ -1,0 +1,14 @@
+#import '../fragments/UserParts.graphql'
+
+query {
+  books {
+    bookId
+    title
+    description
+    authors
+    coverImg
+    owners {
+      ...UserParts
+    }
+  }
+}
