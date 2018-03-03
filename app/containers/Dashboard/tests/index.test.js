@@ -344,7 +344,7 @@ describe('<Dashboard />', () => {
   })
 
   describe('handleRemoveBookFromLibrary', () => {
-    it('should call removeBookFromLibrary with correct prop data', () => {
+    it('should call removeBookFromLibrary with correct prop data', async () => {
       const props = {
         dashboard: {
           userId: 'test|12345'
@@ -366,7 +366,7 @@ describe('<Dashboard />', () => {
 
       const fixture = { bookId: 'book132' }
 
-      renderedComponent.instance().handleRemoveBookFromLibrary(fixture)
+      await renderedComponent.instance().handleRemoveBookFromLibrary(fixture)
       expect(props.removeBookFromLibrary).toHaveBeenCalled()
       expect(props.getUserInfo.refetch).toHaveBeenCalled()
     })
