@@ -2,6 +2,7 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import { Link } from 'react-router-dom'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 
@@ -40,14 +41,14 @@ const Splash = styled.div`
     h1 {
       font-weight: 100;
       font-size: 3em;
-      color: #444;
+      color: rgb(${props => props.theme.darkBlue});
       margin-bottom: 0;
     }
 
     h3 {
       font-weight: 100;
       font-size: 1em;
-      color: #444;
+      color: rgb(${props => props.theme.darkBlue});
       margin-bottom: 2em;
       margin-top: 0.5em;
     }
@@ -55,17 +56,32 @@ const Splash = styled.div`
     button {
       display: inline-block;
       box-sizing: border-box;
-      padding: 1.5em 1em;
+      padding: 0.5em 1em;
       border: none;
       border-radius: 4px;
       outline: 0;
       font-size: 1.5em;
-      background-color: #15B0D5;
+      background-color: rgba(${props => props.theme.blue}, 0.8);
       color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
 
-      &:active: {
-        background: #15B0D5;
-        color: #fff;
+      &:hover {
+        background-color: rgba(${props => props.theme.blue}, 1);
+      }
+    }
+
+    .link-library {
+      margin: 1em 0.5em;
+      a {
+        color: rgba(${props => props.theme.blue}, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+
+        &:hover {
+          text-decoration: none;
+          color: rgba(${props => props.theme.blue}, 1);
+        }
       }
     }
   }
@@ -99,6 +115,9 @@ export class HomePage extends React.Component {
             <img src={logo} alt='Bookswap Logo' />
             <h1>Bookswap</h1>
             <h3>Quickly and easily trade books with like-minded friends.</h3>
+            <div className='link-library'>
+              <Link to='/books'>View the Library or</Link>
+            </div>
             <button onClick={this._handleRoute}>
               Get Started
               <svg fill='#FFFFFF' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'>
@@ -106,6 +125,7 @@ export class HomePage extends React.Component {
                 <path d='M0-.25h24v24H0z' fill='none' />
               </svg>
             </button>
+            <br />
           </main>
         </Splash>
       </article>

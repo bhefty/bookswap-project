@@ -11,6 +11,7 @@ import { createStructuredSelector } from 'reselect'
 import { compose } from 'redux'
 import { graphql } from 'react-apollo'
 import filter from 'lodash/filter'
+import { ToastContainer, toast } from 'react-toastify'
 
 import injectReducer from 'utils/injectReducer'
 import reducer from 'containers/Dashboard/reducer'
@@ -20,6 +21,7 @@ import { loginRequest } from 'auth/actions'
 import LoadingIndicator from 'components/LoadingIndicator'
 import SearchForm from 'components/SearchForm'
 import RequestFromModal from 'components/RequestFromModal'
+import Wrapper from './Wrapper'
 
 import booksQuery from 'graphql/queries/booksQuery.graphql'
 import requestBook from 'graphql/mutations/requestBook.graphql'
@@ -84,6 +86,9 @@ export class BrowseBooks extends React.Component {
       }
     })
     this.closeModal()
+    toast.success('Requested book!', {
+      position: toast.POSITION.BOTTOM_CENTER
+    })
   }
 
   handleRequestFrom = (book) => {
@@ -113,11 +118,12 @@ export class BrowseBooks extends React.Component {
   render () {
     if (this.props.getBooks.loading) return <LoadingIndicator />
     return (
-      <div>
-        <label htmlFor='filter-owned-books'>
-          Don't show books I own
-        </label>
-        <input type='checkbox' className='filter-owned-books' name='filter-owned-books' onChange={e => this.handleHideMyBooks(e)} />
+      <Wrapper>
+        <div className='filter-input-wrapper'>
+          <span>Hide my books</span>
+          <input type='checkbox' className='filter-owned-books toggle-checkbox' id='cb-filter' onChange={e => this.handleHideMyBooks(e)} />
+          <label className='toggle-button' htmlFor='cb-filter' />
+        </div>
         <SearchForm
           handleSubmit={this.handleFilterBooks}
           inputValue={this.state.filterTitle}
@@ -141,7 +147,8 @@ export class BrowseBooks extends React.Component {
           bookOwners={this.state.selectedBookOwners}
           onSelectOwner={this.handleRequestBook}
         />
-      </div>
+        <ToastContainer />
+      </Wrapper>
     )
   }
 }

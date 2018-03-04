@@ -3,7 +3,7 @@
 exports[`<HomePage /> should render the page 1`] = `
 <article>
   <div
-    className="HomePage__Splash-eQGvGD icCRCs"
+    className="HomePage__Splash-eQGvGD jUnqGR"
   >
     <main>
       <img
@@ -16,6 +16,16 @@ exports[`<HomePage /> should render the page 1`] = `
       <h3>
         Quickly and easily trade books with like-minded friends.
       </h3>
+      <div
+        className="link-library"
+      >
+        <a
+          href="/books"
+          onClick={[Function]}
+        >
+          View the Library or
+        </a>
+      </div>
       <button
         onClick={[Function]}
       >
@@ -36,6 +46,7 @@ exports[`<HomePage /> should render the page 1`] = `
           />
         </svg>
       </button>
+      <br />
     </main>
   </div>
 </article>

@@ -32,7 +32,7 @@ export default styled.div`
           border-right: 1px solid #fff;
         }
         outline: 0;
-        background: rgba(59, 171, 221, 0.5);
+        background: rgba(${props => props.theme.lightBlue}, 0.8);
         transition: background 0.3s ease-in-out;
         color: #fff;
         cursor: pointer;
@@ -45,7 +45,7 @@ export default styled.div`
           }
         }
         &:hover {
-          background: rgba(59, 171, 221, 1);
+          background: rgba(${props => props.theme.lightBlue}, 1);
         }
       }
       button:first-child {

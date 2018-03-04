@@ -1,5 +1,6 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
+import { MemoryRouter } from 'react-router-dom'
 import { shallow } from 'enzyme'
 
 import { HomePage, mapDispatchToProps } from '../index'
@@ -8,7 +9,9 @@ import { loginRequest } from 'auth/actions'
 describe('<HomePage />', () => {
   it('should render the page', () => {
     const tree = renderer.create(
-      <HomePage />
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
     ).toJSON()
     expect(tree).toMatchSnapshot()
   })

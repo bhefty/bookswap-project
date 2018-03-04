@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { compose } from 'redux'
 import { graphql } from 'react-apollo'
+import { ToastContainer, toast } from 'react-toastify'
 
 import injectReducer from 'utils/injectReducer'
 import { makeSelectDashboard } from './selectors'
@@ -65,6 +66,9 @@ export class Dashboard extends React.Component {
   }
 
   handleAddBook = async (book) => {
+    toast.success('Book added to your library!', {
+      position: toast.POSITION.BOTTOM_CENTER
+    })
     await this.props.addBookToLibrary({
       variables: {
         userId: this.props.dashboard.userId,
@@ -89,6 +93,9 @@ export class Dashboard extends React.Component {
   }
 
   handleCancelRequest = async (item) => {
+    toast.success('Cancelled request!', {
+      position: toast.POSITION.BOTTOM_CENTER
+    })
     await this.props.cancelRequestBook({
       variables: {
         requesterId: this.props.dashboard.userId,
@@ -100,6 +107,9 @@ export class Dashboard extends React.Component {
   }
 
   handleDenyRequest = async (item) => {
+    toast.info('Denied request!', {
+      position: toast.POSITION.BOTTOM_CENTER
+    })
     await this.props.cancelRequestBook({
       variables: {
         requesterId: item.requester.userId,
@@ -111,6 +121,9 @@ export class Dashboard extends React.Component {
   }
 
   handleAcceptRequest = async (item) => {
+    toast.success('Accepted request!', {
+      position: toast.POSITION.BOTTOM_CENTER
+    })
     await this.props.acceptRequest({
       variables: {
         ownerId: this.props.dashboard.userId,
@@ -122,6 +135,9 @@ export class Dashboard extends React.Component {
   }
 
   handleRemoveBookFromLibrary = async (book) => {
+    toast.success('Book removed from library!', {
+      position: toast.POSITION.BOTTOM_CENTER
+    })
     await this.props.removeBookFromLibrary({
       variables: {
         userId: this.props.dashboard.userId,
@@ -144,6 +160,9 @@ export class Dashboard extends React.Component {
       this.setState({
         editUserNameValue: ''
       })
+      toast.success('Updated name!', {
+        position: toast.POSITION.BOTTOM_CENTER
+      })
     }
     if (editUserEmailValue !== email && editUserEmailValue !== '') {
       await this.props.editUserEmail({
@@ -155,6 +174,9 @@ export class Dashboard extends React.Component {
       this.setState({
         editUserEmailValue: ''
       })
+      toast.success('Updated email!', {
+        position: toast.POSITION.BOTTOM_CENTER
+      })
     }
     if (editUserLocationValue !== location && editUserLocationValue !== '') {
       await this.props.editUserLocation({
@@ -165,6 +187,9 @@ export class Dashboard extends React.Component {
       })
       this.setState({
         editUserLocationValue: ''
+      })
+      toast.success('Updated location!', {
+        position: toast.POSITION.BOTTOM_CENTER
       })
     }
     if ((editUserNameValue !== name && editUserNameValue !== '') || (editUserEmailValue !== email && editUserEmailValue !== '') || (editUserLocationValue !== location && editUserLocationValue !== '')) {
@@ -263,6 +288,7 @@ export class Dashboard extends React.Component {
         <div className='content'>
           {renderedContent}
         </div>
+        <ToastContainer />
       </Wrapper>
     )
   }

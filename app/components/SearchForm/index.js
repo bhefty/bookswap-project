@@ -20,7 +20,7 @@ const Wrapper = styled.div`
         position: absolute;
         margin-top: 1.25em;
         width: 50px;
-        fill: rgba(0, 0, 0, 0.6);
+        fill: rgba(${props => props.theme.darkBlue}, 0.6);
       }
 
       input {
@@ -30,17 +30,19 @@ const Wrapper = styled.div`
           width: 90vw;
         }
         border: none;
-        border-bottom: 2px solid #ccc;
+        border-bottom: 2px solid rgba(${props => props.theme.darkBlue}, 0.2);
         padding: 1em 50px 0.75em 50px;
         font-size: 1.25em;
         font-weight: 400;
         outline: 0;
+        transition: border-color 0.3s ease-in-out;
         ::placeholder {
           color: rgba(0, 0, 0, 0.3);
+          transition: color 0.3s ease-in-out;
         }
 
         &:focus {
-          border-color: #85b7b9;
+          border-color: rgba(${props => props.theme.darkBlue}, 0.5);
           ::placeholder {
             color: rgba(0, 0, 0, 0.5);
           }

@@ -80,7 +80,6 @@ const Profile = ({ userInfo, editName, editEmail, editLocation, handleEditProfil
   <Wrapper>
     <h1>Edit your information</h1>
     <div className='content-profile'>
-      <h2>{userInfo.name}</h2>
       <section>
         <div className='content-input-wrapper'>
           <svg fill='#000000' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'>

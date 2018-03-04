@@ -37,7 +37,12 @@ const theme = {
   lightAccent: '#77938D',
   darkAccent: '#5472A1',
   darkShade: '#1B1720',
-  whiteMain: '#FAFAFA'
+  whiteMain: '#FAFAFA',
+  darkBlue: '16, 52, 88',
+  red: '236, 63, 59',
+  lightGreen: '130, 180, 136',
+  blue: '61, 150, 213',
+  lightBlue: `121, 203, 236`
 }
 
 const AppWrapper = styled.div`
