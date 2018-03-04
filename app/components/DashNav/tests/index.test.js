@@ -20,6 +20,25 @@ describe('<DashNav />', () => {
     expect(renderedComponent.find('Wrapper').length).toEqual(1)
   })
 
+  it('should toggle state of expanded', () => {
+    const props = {
+      userInfo: {
+        userId: 'test|12345',
+        booksInLibrary: [],
+        booksUserRequested: [],
+        booksOtherRequested: []
+      },
+      updateShowSection: jest.fn()
+    }
+    const renderedComponent = shallow(
+      <DashNav {...props} />
+    )
+
+    expect(renderedComponent.state().expanded).toEqual(false)
+    renderedComponent.instance().toggleNav()
+    expect(renderedComponent.state().expanded).toEqual(true)
+  })
+
   it('should handle updateShowSection function', () => {
     const props = {
       userInfo: {
