@@ -25,7 +25,8 @@ export default styled.header`
     .header__logo {
       img {
         width: 100%;
-        margin: 5px;
+        margin-top: 5px;
+        padding: 5px;
       }
     }
 

@@ -1,13 +1,16 @@
 import styled from 'styled-components'
 
 export default styled.div`
+@media (min-width: 500px) {
   display: grid;
   grid-template-columns: 100px 1fr;
   grid-gap: 2em;
 
-  @media (max-width: 848px) {
+}
+
+  /* @media (max-width: 848px) {
     display: block;
-  }
+  } */
 
   .content {
     text-align: center;
