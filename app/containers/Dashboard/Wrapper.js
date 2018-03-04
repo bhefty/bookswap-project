@@ -10,6 +10,7 @@ export default styled.div`
   }
 
   .content {
+    text-align: center;
     h1 {
       font-weight: 200;
     }

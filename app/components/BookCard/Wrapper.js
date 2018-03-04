@@ -87,25 +87,25 @@ export default styled.div`
         transition: background 0.5s ease-in-out;        
       }
       .btn-red {
-          color: #ff3232;
+          color: rgb(${props => props.theme.red});
           &:hover {
-            background: #ff3232;
+            background: rgb(${props => props.theme.red});
             color: #fff;
           }
         }
 
         .btn-blue {
-          color: #0080ff;
+          color: rgb(${props => props.theme.blue});
           &:hover {
-            background: #0080ff;
+            background: rgb(${props => props.theme.blue});
             color: #fff;
           }
         }
 
         .btn-green {
-          color: #22c354;
+          color: rgb(${props => props.theme.lightGreen});
           &:hover {
-            background: #22c354;
+            background: rgb(${props => props.theme.lightGreen});
             color: #fff;
           }
         }
