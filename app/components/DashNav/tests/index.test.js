@@ -17,7 +17,7 @@ describe('<DashNav />', () => {
     const renderedComponent = shallow(
       <DashNav {...props} />
     )
-    expect(renderedComponent.find('Wrapper').length).toEqual(1)
+    expect(renderedComponent.length).toEqual(1)
   })
 
   it('should toggle state of expanded', () => {
