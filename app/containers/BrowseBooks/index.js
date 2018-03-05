@@ -41,6 +41,10 @@ export class BrowseBooks extends React.Component {
     isAuthenticated: PropTypes.bool.isRequired
   }
 
+  componentWillMount = () => {
+    this.props.getBooks.refetch()
+  }
+
   handleHideMyBooks = (e) => {
     const currentBooks = this.state.filteredBookResults.length > 0 ? this.state.filteredBookResults : this.props.getBooks.books
     if (e.target.checked) {
