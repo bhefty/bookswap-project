@@ -6,7 +6,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import Auth from 'utils/auth'
 
 import Header from 'components/Header'
-import Footer from 'components/Footer'
+// import Footer from 'components/Footer'
 import HomePage from 'containers/HomePage/Loadable'
 import FeaturePage from 'containers/FeaturePage/Loadable'
 import Dashboard from 'containers/Dashboard/Loadable'
@@ -76,7 +76,7 @@ export default function App (store) {
             <Route path='' component={NotFoundPage} />
           </Switch>
         </AppWrapper>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </ThemeProvider>
   )

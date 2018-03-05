@@ -6,6 +6,8 @@
 import styled from 'styled-components'
 
 export default styled.div`
+  margin-bottom: 50px;
+
   .filter-input-wrapper {
     position: fixed;
     bottom: 10px;
