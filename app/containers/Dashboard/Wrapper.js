@@ -1,16 +1,10 @@
+/**
+ * Inspired by:
+ * https://codepen.io/nwest88/pen/PwwZpv?editors=1100
+ */
+
 import styled, { keyframes } from 'styled-components'
 
-// @-webkit-keyframes pulse {
-//   0% {
-//     -webkit-box-shadow: 0 0 0 0 rgba(61, 150, 213, 0.4);
-//   }
-//   70% {
-//       -webkit-box-shadow: 0 0 0 10px rgba(61, 150, 213, 0);
-//   }
-//   100% {
-//       -webkit-box-shadow: 0 0 0 0 rgba(61, 150, 213, 0);
-//   }
-// }
 const pulse = keyframes`
   0% {
     -moz-box-shadow: 0 0 0 0 rgba(61, 150, 213, 0.4);
