@@ -41,6 +41,10 @@ export class BrowseBooks extends React.Component {
     isAuthenticated: PropTypes.bool.isRequired
   }
 
+  componentWillMount = () => {
+    this.props.getBooks.refetch()
+  }
+
   handleHideMyBooks = (e) => {
     const currentBooks = this.state.filteredBookResults.length > 0 ? this.state.filteredBookResults : this.props.getBooks.books
     if (e.target.checked) {
@@ -119,11 +123,13 @@ export class BrowseBooks extends React.Component {
     if (this.props.getBooks.loading) return <LoadingIndicator />
     return (
       <Wrapper>
-        <div className='filter-input-wrapper'>
-          <span>Hide my books</span>
-          <input type='checkbox' className='filter-owned-books toggle-checkbox' id='cb-filter' onChange={e => this.handleHideMyBooks(e)} />
-          <label className='toggle-button' htmlFor='cb-filter' />
-        </div>
+        {this.props.isAuthenticated &&
+          <div className='filter-input-wrapper'>
+            <span>Hide my books</span>
+            <input type='checkbox' className='filter-owned-books toggle-checkbox' id='cb-filter' onChange={e => this.handleHideMyBooks(e)} />
+            <label className='toggle-button' htmlFor='cb-filter' />
+          </div>
+        }
         <SearchForm
           handleSubmit={this.handleFilterBooks}
           inputValue={this.state.filterTitle}

@@ -15,7 +15,8 @@ describe('<Dashboard />', () => {
           booksInLibrary: [],
           booksUserRequested: [],
           booksOtherRequested: []
-        }
+        },
+        refetch: jest.fn()
       }
     }
     const renderedComponent = shallow(
@@ -35,7 +36,8 @@ describe('<Dashboard />', () => {
           booksInLibrary: [],
           booksUserRequested: [],
           booksOtherRequested: []
-        }
+        },
+        refetch: jest.fn()
       }
     }
     const renderedComponent = shallow(
@@ -56,7 +58,8 @@ describe('<Dashboard />', () => {
           booksInLibrary: [],
           booksUserRequested: [],
           booksOtherRequested: []
-        }
+        },
+        refetch: jest.fn()
       }
     }
     const renderedComponent = shallow(
@@ -402,7 +405,6 @@ describe('<Dashboard />', () => {
       expect(props.editUserName).not.toHaveBeenCalled()
       expect(props.editUserEmail).not.toHaveBeenCalled()
       expect(props.editUserLocation).not.toHaveBeenCalled()
-      expect(props.getUserInfo.refetch).not.toHaveBeenCalled()
     })
 
     it('should call editUserName if user has changed name', async () => {

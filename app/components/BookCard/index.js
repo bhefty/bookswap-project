@@ -9,15 +9,15 @@ import PropTypes from 'prop-types'
 
 import Wrapper from './Wrapper'
 
-function BookCard ({ book, action }) {
+function BookCard ({ book, action, requesterName }) {
   return (
     <Wrapper>
       <div className='content-library-book-card'>
         <div className='content-library-book-card_img-wrap'>
           <img src={book.coverImg} alt={book.title} />
-          <div className='content-library-book-card_img-context'>
+          {/* <div className='content-library-book-card_img-context'>
             <button>View Details</button>
-          </div>
+          </div> */}
         </div>
         <div className='content-library-book-card_details'>
           <p className='book-title'>
@@ -27,6 +27,11 @@ function BookCard ({ book, action }) {
             {book.authors.join(', ')}
           </p>
         </div>
+        {requesterName &&
+          <div className='content-library-book-requester'>
+            Requested by: {requesterName}
+          </div>
+        }
         <div className='content-library-book-card_actions'>
           <button className={action.primaryButtonClass} onClick={() => action.handleAction(book)}>{action.actionText}</button>
           {action.actionAdditionalText &&
@@ -52,7 +57,8 @@ BookCard.propTypes = {
     actionAdditionalText: PropTypes.string,
     primaryButtonClass: PropTypes.string.isRequired,
     secondaryButtonClass: PropTypes.string
-  })
+  }),
+  requesterName: PropTypes.string
 }
 
 export default BookCard

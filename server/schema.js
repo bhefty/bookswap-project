@@ -331,6 +331,22 @@ const resolvers = {
                 $pull: { booksUserRequested: { bookId: bookId, ownerId: ownerId } },
                 $push: { booksInLibrary: bookId }
               }, { new: true })
+                // Clean up book requests from other users
+                .then(() => {
+                  owner.booksOtherRequested.map(request => {
+                    if (request.requesterId !== requesterId) {
+                      User.findOneAndUpdate({ userId: request.requesterId }, {
+                        $pull: { booksUserRequested: { bookId: bookId, ownerId: ownerId } }
+                      }, { new: true })
+                        .then(doc => console.log('removed from userRequested', doc))
+                      // Remove book from owner's list related to this particular requester
+                      User.findOneAndUpdate({ userId: owner.userId }, {
+                        $pull: { booksOtherRequested: { bookId: bookId, requesterId: request.requesterId } }
+                      }, { new: true })
+                        .then(doc => console.log('removed from otherRequested', doc))
+                    }
+                  })
+                })
                 .then(() => {
                   // Remove book from owner's requested from other's list
                   return User.findOneAndUpdate({ userId: owner.userId }, {

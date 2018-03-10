@@ -9,11 +9,12 @@ const OtherRequested = ({ userInfo, handleDenyRequest, handleAcceptRequest }) =>
     <div className='content-library'>
       {(userInfo.booksOtherRequested.length === 0)
         ? (<div className='content-library-empty'>No pending requests at this time!</div>)
-        : userInfo.booksOtherRequested.map((item) => {
+        : userInfo.booksOtherRequested.map((item, idx) => {
           return (
             <BookCard
-              key={item.book.bookId}
+              key={idx}
               book={item.book}
+              requesterName={item.requester.name}
               action={{
                 handleAction: () => handleAcceptRequest(item),
                 handleAdditionalAction: () => handleDenyRequest(item),

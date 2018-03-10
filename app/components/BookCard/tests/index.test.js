@@ -44,7 +44,7 @@ describe('<BookCard />', () => {
     const renderedComponent = shallow(
       <BookCard {...props} />
     )
-    expect(renderedComponent.find('button').length).toEqual(3)
+    expect(renderedComponent.find('button').length).toEqual(2)
     expect(renderedComponent.find('.btn-blue').length).toEqual(1)
   })
 

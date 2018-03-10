@@ -28,6 +28,9 @@ describe('<OtherRequested />', () => {
             title: 'Test Title',
             authors: ['Bill'],
             coverImg: 'test.jpg'
+          },
+          requester: {
+            name: 'John Smith'
           }
         }]
       },
@@ -49,6 +52,9 @@ describe('<OtherRequested />', () => {
             title: 'Test Title',
             authors: ['Bill'],
             coverImg: 'test.jpg'
+          },
+          requester: {
+            name: 'John Smith'
           }
         }]
       },

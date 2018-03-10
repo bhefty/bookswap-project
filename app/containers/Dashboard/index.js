@@ -51,6 +51,10 @@ export class Dashboard extends React.Component {
     editUserLocationValue: ''
   }
 
+  componentDidMount = () => {
+    this.refreshData()
+  }
+
   updateShowSection = (newSection) => {
     this.setState({ showSection: newSection })
   }

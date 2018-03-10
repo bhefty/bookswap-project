@@ -70,6 +70,13 @@ export default styled.div`
       }
     }
 
+    .content-library-book-requester {
+      text-align: center;
+      margin: 1em;
+      font-weight: 600;
+      color: rgb(${props => props.theme.lightGreen});
+    }
+
     .content-library-book-card_actions {
       border-top: 1px solid rgba(0,0,0,.05);
       display: flex;
