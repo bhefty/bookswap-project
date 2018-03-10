@@ -15,9 +15,9 @@ function BookCard ({ book, action, requesterName }) {
       <div className='content-library-book-card'>
         <div className='content-library-book-card_img-wrap'>
           <img src={book.coverImg} alt={book.title} />
-          <div className='content-library-book-card_img-context'>
+          {/* <div className='content-library-book-card_img-context'>
             <button>View Details</button>
-          </div>
+          </div> */}
         </div>
         <div className='content-library-book-card_details'>
           <p className='book-title'>
