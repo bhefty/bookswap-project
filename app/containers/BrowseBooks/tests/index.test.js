@@ -11,7 +11,8 @@ describe('<BrowseBooks />', () => {
       isAuthenticated: false,
       getBooks: {
         loading: false,
-        books: []
+        books: [],
+        refetch: jest.fn()
       }
     }
     const renderedComponent = shallow(
@@ -26,7 +27,8 @@ describe('<BrowseBooks />', () => {
       isAuthenticated: false,
       getBooks: {
         loading: true,
-        books: []
+        books: [],
+        refetch: jest.fn()
       }
     }
     const renderedComponent = shallow(
@@ -61,7 +63,8 @@ describe('<BrowseBooks />', () => {
             userId: 'not|me',
             name: 'John'
           }]
-        }]
+        }],
+        refetch: jest.fn()
       }
     }
     const renderedComponent = mount(
@@ -97,7 +100,8 @@ describe('<BrowseBooks />', () => {
             userId: 'not|me',
             name: 'John'
           }]
-        }]
+        }],
+        refetch: jest.fn()
       }
     }
     const renderedComponent = mount(
@@ -132,7 +136,8 @@ describe('<BrowseBooks />', () => {
             userId: 'not|me',
             name: 'John'
           }]
-        }]
+        }],
+        refetch: jest.fn()
       }
     }
     const renderedComponent = mount(
@@ -162,7 +167,8 @@ describe('<BrowseBooks />', () => {
               userId: 'not|me',
               name: 'John'
             }]
-          }]
+          }],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
@@ -209,7 +215,8 @@ describe('<BrowseBooks />', () => {
               userId: 'not|me',
               name: 'John'
             }]
-          }]
+          }],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
@@ -238,7 +245,8 @@ describe('<BrowseBooks />', () => {
         isAuthenticated: false,
         getBooks: {
           loading: true,
-          books: []
+          books: [],
+          refetch: jest.fn()
         }
       }
       const renderedComponent = shallow(
@@ -265,7 +273,8 @@ describe('<BrowseBooks />', () => {
         isAuthenticated: false,
         getBooks: {
           loading: true,
-          books: []
+          books: [],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
@@ -300,7 +309,8 @@ describe('<BrowseBooks />', () => {
         isAuthenticated: false,
         getBooks: {
           loading: true,
-          books: []
+          books: [],
+          refetch: jest.fn()
         }
       }
       const renderedComponent = shallow(
@@ -313,10 +323,31 @@ describe('<BrowseBooks />', () => {
   })
 
   describe('handleHideMyBooks', () => {
-    it('should filter based on filteredBookResults if > 0', () => {
+    it('should not show if user is not logged in', () => {
       const props = {
         login: jest.fn(),
         isAuthenticated: false,
+        getBooks: {
+          loading: false,
+          books: [],
+          refetch: jest.fn()
+        },
+        userInfo: {
+          userId: 'test|0987'
+        },
+        handleHideMyBooks: jest.fn()
+      }
+
+      const renderedComponent = shallow(
+        <BrowseBooks {...props} />
+      )
+
+      expect(renderedComponent.find('.filter-owned-books').length).toEqual(0)
+    })
+    it('should filter based on filteredBookResults if > 0', () => {
+      const props = {
+        login: jest.fn(),
+        isAuthenticated: true,
         getBooks: {
           loading: false,
           books: [{
@@ -347,7 +378,8 @@ describe('<BrowseBooks />', () => {
               userId: 'test|0987',
               name: 'Bill'
             }]
-          }]
+          }],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
@@ -406,7 +438,7 @@ describe('<BrowseBooks />', () => {
     it('should change state of filteredBookResultsWithHidden if check', () => {
       const props = {
         login: jest.fn(),
-        isAuthenticated: false,
+        isAuthenticated: true,
         getBooks: {
           loading: false,
           books: [{
@@ -423,7 +455,8 @@ describe('<BrowseBooks />', () => {
               userId: 'not|me',
               name: 'John'
             }]
-          }]
+          }],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
@@ -450,7 +483,7 @@ describe('<BrowseBooks />', () => {
     it('should change state of filteredBookResultsWithHidden if uncheck', () => {
       const props = {
         login: jest.fn(),
-        isAuthenticated: false,
+        isAuthenticated: true,
         getBooks: {
           loading: false,
           books: [{
@@ -467,7 +500,8 @@ describe('<BrowseBooks />', () => {
               userId: 'not|me',
               name: 'John'
             }]
-          }]
+          }],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
@@ -492,7 +526,8 @@ describe('<BrowseBooks />', () => {
         isAuthenticated: false,
         getBooks: {
           loading: true,
-          books: []
+          books: [],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
@@ -516,7 +551,8 @@ describe('<BrowseBooks />', () => {
         isAuthenticated: false,
         getBooks: {
           loading: true,
-          books: []
+          books: [],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
@@ -541,7 +577,8 @@ describe('<BrowseBooks />', () => {
         isAuthenticated: false,
         getBooks: {
           loading: true,
-          books: []
+          books: [],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
@@ -575,7 +612,8 @@ describe('<BrowseBooks />', () => {
         isAuthenticated: false,
         getBooks: {
           loading: true,
-          books: []
+          books: [],
+          refetch: jest.fn()
         },
         userInfo: {
           userId: 'test|0987'
