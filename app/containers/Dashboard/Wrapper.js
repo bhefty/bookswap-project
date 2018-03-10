@@ -21,6 +21,13 @@ const pulse = keyframes`
 `
 
 export default styled.div`
+  .content-library {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 350px));
+    grid-gap: 1em;
+    justify-content: center;
+  }
+
   @media (min-width: 500px) {
     display: grid;
     grid-template-columns: 100px 1fr;
